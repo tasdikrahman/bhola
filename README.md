@@ -19,11 +19,15 @@ a specific time, each and every domain in it's database
 - /api/v1/domains POST -d {'domain': 'foo.example.com'} should return 201 Created and store the domain in the db if
 the domain is of valid format.
 
-### What bhola is not
+### What bhola is not/will not be
 
 - will not generate certificates for you by being the intermediate broker
 - will not install the certificates for it's clients
 - will not provide a UI to generate/install/replace the certs for it's clients
+
+## Progress
+
+- [ ] v0.1
 
 ### Backlog
 
