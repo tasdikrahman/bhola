@@ -19,6 +19,56 @@ a specific time, each and every domain in it's database
 - `/api/v1/domains POST -d {'domain': 'foo.example.com'}` should return 201 Created and store the domain in the db if
 the domain is of valid format.
 
+## Dev setup
+
+```
+$ docker run --name postgres -e POSTGRES_PASSWORD=password -e POSTGRES_USER=bhola_dev -e POSTGRES_DB=bhola_dev -p 5432:5432 -d postgres:12.3
+```
+
+#### Connecting to the local database
+
+```
+$ psql -h localhost -p 5432 -U bhola_dev -d bhola_dev
+Password for user bhola_dev:
+psql (12.3)
+Type "help" for help.
+
+bhola_dev=# \l
+                                  List of databases
+   Name    |   Owner   | Encoding |  Collate   |   Ctype    |    Access privileges
+-----------+-----------+----------+------------+------------+-------------------------
+ bhola_dev | bhola_dev | UTF8     | en_US.utf8 | en_US.utf8 |
+ postgres  | bhola_dev | UTF8     | en_US.utf8 | en_US.utf8 |
+ template0 | bhola_dev | UTF8     | en_US.utf8 | en_US.utf8 | =c/bhola_dev           +
+           |           |          |            |            | bhola_dev=CTc/bhola_dev
+ template1 | bhola_dev | UTF8     | en_US.utf8 | en_US.utf8 | =c/bhola_dev           +
+           |           |          |            |            | bhola_dev=CTc/bhola_dev
+(4 rows)
+
+bhola_dev=# \du
+                                   List of roles
+ Role name |                         Attributes                         | Member of
+-----------+------------------------------------------------------------+-----------
+ bhola_dev | Superuser, Create role, Create DB, Replication, Bypass RLS | {}
+
+bhola_dev=#
+```
+
+#### Installing the postgresql client
+
+```
+# For arch based systems
+$ sudo pacman -S postgresql-libs
+```
+
+### Running specs
+
+```
+# assuming you have run are running the postgres container already
+$ RAILS_ENV=test rails db:drop db:create db:migrate
+$ bundle exec rspec
+```
+
 ### What bhola is not/will not be
 
 - will not generate certificates for you by being the intermediate broker
@@ -27,6 +77,7 @@ the domain is of valid format.
 
 ## Progress
 
+- [ ] Run specs in CI with each push
 - [ ] v0.1
 
 ### Backlog
