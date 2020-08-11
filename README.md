@@ -61,6 +61,14 @@ bhola_dev=#
 $ sudo pacman -S postgresql-libs
 ```
 
+### Running specs
+
+```
+# assuming you have run are running the postgres container already
+$ RAILS_ENV=test rails db:drop db:create db:migrate
+$ bundle exec rspec
+```
+
 ### What bhola is not/will not be
 
 - will not generate certificates for you by being the intermediate broker
