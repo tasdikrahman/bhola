@@ -22,7 +22,7 @@ the domain is of valid format.
 ## Dev setup
 
 ```
-$ docker run --name postgres -e POSTGRES_PASSWORD=password -e POSTGRES_USER=bhola_dev -e POSTGRES_DB=bhola_dev -p 5432:5432 -d postgres
+$ docker run --name postgres -e POSTGRES_PASSWORD=password -e POSTGRES_USER=bhola_dev -e POSTGRES_DB=bhola_dev -p 5432:5432 -d postgres:12.3
 ```
 
 #### Connecting to the local database
