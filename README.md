@@ -69,6 +69,18 @@ $ RAILS_ENV=test rails db:drop db:create db:migrate
 $ bundle exec rspec
 ```
 
+### Api docs
+
+- inserting domain to be tracked
+```
+$ curl --location --request POST 'localhost:3000/api/v1/domains' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "fqdn": "foo.example.com"
+}'
+```
+
+
 ### What bhola is not/will not be
 
 - will not generate certificates for you by being the intermediate broker
