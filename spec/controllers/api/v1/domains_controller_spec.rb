@@ -2,29 +2,54 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::DomainsController, type: :controller do
   describe 'POST #create' do
-    context 'when the domain passed does not exist inside the database' do
+    context 'when the user sends a domain to be tracked' do
       let(:input_fqdn) { 'foo.example.com' }
       let(:params) do
         {
             'fqdn' => input_fqdn
         }
       end
-      let(:expected_response) do
-        {
-            'data' => {
-                'fqdn' => input_fqdn
-            },
-            'errors' => []
-        }.to_json
+
+      context 'and it doesn\'t exist in the db' do
+        let(:expected_response) do
+          {
+              'data' => {
+                  'fqdn' => input_fqdn
+              },
+              'errors' => []
+          }.to_json
+        end
+
+        it 'persists the fqdn in the db' do
+          post :create, :params => params
+
+          expect(response).to have_http_status(201)
+          expect(response.content_type).to eq('application/json; charset=utf-8')
+          expect(response.body).to eq(expected_response)
+          expect(Domain.where(fqdn: input_fqdn).count).to eq(1)
+        end
       end
 
-      it 'saves the domain in the db' do
-        post :create, :params => params
+      context 'and it already is being tracked' do
+        let(:expected_response) do
+          {
+              'data' => {
+                  'fqdn' => input_fqdn
+              },
+              'errors' => ['domain already is already being tracked']
+          }.to_json
+        end
 
-        expect(response).to have_http_status(201)
-        expect(response.content_type).to eq('application/json; charset=utf-8')
-        expect(response.body).to eq(expected_response)
-        expect(Domain.where(fqdn: input_fqdn).count).to eq(1)
+        it 'returns back the uniqueness validation error message' do
+          Domain.create!(fqdn: input_fqdn)
+
+          post :create, :params => params
+
+          expect(response).to have_http_status(422)
+          expect(response.content_type).to eq('application/json; charset=utf-8')
+          expect(response.body).to eq(expected_response)
+          expect(Domain.all.count).to eq(1)
+        end
       end
     end
   end
