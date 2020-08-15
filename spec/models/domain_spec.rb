@@ -12,4 +12,13 @@ RSpec.describe Domain, type: :model do
     domain = Domain.create(fqdn: 'foo.example.com')
     expect(domain.certificate_expiring).to be_falsey
   end
+
+  it 'has a uniqueness check on the fqdn when trying to create persist object' do
+    fqdn = 'foo.example.com'
+    Domain.create!(fqdn: fqdn)
+    domain2 = Domain.new(fqdn: fqdn)
+
+    expect(domain2).to_not be_valid
+    expect(domain2.errors[:fqdn]).to include("has already been taken")
+  end
 end

@@ -1,3 +1,3 @@
 class Domain < ApplicationRecord
-  validates_presence_of :fqdn
+  validates :fqdn, presence: true, uniqueness: true
 end
