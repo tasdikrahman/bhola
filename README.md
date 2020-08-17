@@ -79,6 +79,10 @@ $ curl --location --request POST 'localhost:3000/api/v1/domains' \
     "fqdn": "foo.example.com"
 }'
 ```
+- querying a domain stored
+```
+$ curl --location --request GET 'localhost:3000/api/v1/domains/1'
+```
 
 
 ### What bhola is not/will not be
