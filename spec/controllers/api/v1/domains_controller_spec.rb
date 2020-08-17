@@ -57,14 +57,9 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
   describe 'GET #show' do
     context 'user requests for a domain resource' do
       let(:input_fqdn) { 'foo.example.com' }
-      let!(:domain) { Domain.create(fqdn: input_fqdn) }
 
       context 'the id exists' do
-        let(:request_params) do
-          {
-              id => domain.id
-          }
-        end
+        let!(:domain) { Domain.create(fqdn: input_fqdn) }
         let(:expected_response) do
           {
               'data' => {
@@ -76,9 +71,27 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
         end
 
         it 'returns back the fqdn associated with that id' do
-          get :show, params: { id: domain.id}
+          get :show, params: { id: domain.id }
 
           expect(response).to have_http_status(200)
+          expect(response.content_type).to eq('application/json; charset=utf-8')
+          expect(response.body).to eq(expected_response)
+        end
+      end
+
+      context 'the id doesn\'t exists' do
+        let(:input_id) { 1 }
+        let(:expected_response) do
+          {
+              'data' => [],
+              'errors' => ["requested id: #{input_id} doesn't exist"]
+          }.to_json
+        end
+
+        it 'returns back the error message that the id doesn\'t exist' do
+          get :show, params: { id: input_id }
+
+          expect(response).to have_http_status(404)
           expect(response.content_type).to eq('application/json; charset=utf-8')
           expect(response.body).to eq(expected_response)
         end
