@@ -27,4 +27,14 @@ RSpec.describe Domain, type: :model do
     expect(domain2.errors[:fqdn]).to include("has already been taken")
     expect(Domain.all.count).to eq(1)
   end
+
+  context '#check_certificate' do
+    let(:domain) { Domain.create(fqdn: 'foo.example.com') }
+
+    it 'instantiates ctx object to be used when created socket' do
+      expect(OpenSSL::SSL::SSLContext).to receive(:new)
+
+      domain.check_certificate
+    end
+  end
 end
