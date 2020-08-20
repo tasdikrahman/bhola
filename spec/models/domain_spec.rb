@@ -30,9 +30,16 @@ RSpec.describe Domain, type: :model do
 
   context '#check_certificate' do
     let(:domain) { Domain.create(fqdn: 'foo.example.com') }
+    let(:port) { 443 }
 
     it 'instantiates ctx object to be used when created socket' do
       expect(OpenSSL::SSL::SSLContext).to receive(:new)
+
+      domain.check_certificate
+    end
+
+    it 'creates a new TCPSocket object with the fqdn of the domain over port 443' do
+      expect(TCPSocket).to receive(:new).with(domain.fqdn, 443)
 
       domain.check_certificate
     end

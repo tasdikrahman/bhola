@@ -3,5 +3,6 @@ class Domain < ApplicationRecord
 
   def check_certificate
     ctx = OpenSSL::SSL::SSLContext.new
+    socket = TCPSocket.new(self.fqdn, 443)
   end
 end
