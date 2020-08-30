@@ -29,19 +29,38 @@ RSpec.describe Domain, type: :model do
   end
 
   context '#check_certificate' do
-    let(:domain) { Domain.create(fqdn: 'foo.example.com') }
+    let(:fqdn) { 'foo.example.com' }
+    let(:domain) { Domain.create(fqdn: fqdn) }
     let(:port) { 443 }
 
-    it 'instantiates ctx object to be used when created socket' do
-      expect(OpenSSL::SSL::SSLContext).to receive(:new)
+    context 'connection is successfull' do
+      context 'the certificate is valid' do
+        let(:cert_name) { OpenSSL::X509::Name.new [['CN', 'www.github.com'], ['O', 'Github\, Inc.'], ['L', 'San Francisco'],
+                                                   ['ST', 'California'], ['C', 'US']] }
+        let(:cert_not_before) { Time.parse("2012-10-1 8:00:00 Pacific Time (US & Canada)").utc }
+        let(:cert_not_after) { Time.parse("2030-10-1 8:00:00 Pacific Time (US & Canada)").utc }
+        let(:cert) { OpenSSL::X509::Certificate.new }
 
-      domain.check_certificate
-    end
+        it 'does nothing to the certificate_expiring field' do
+          cert.subject = cert_name
+          cert.not_before = cert_not_before
+          cert.not_after = cert_not_after
+          tcpsocket_double = double(TCPSocket)
+          sslcontext_double = double(OpenSSL::SSL::SSLContext)
+          sslsocket_double = double(OpenSSL::SSL::SSLSocket)
 
-    it 'creates a new TCPSocket object with the fqdn of the domain over port 443' do
-      expect(TCPSocket).to receive(:new).with(domain.fqdn, 443)
+          expect(OpenSSL::SSL::SSLContext).to receive(:new).and_return(sslcontext_double)
+          expect(TCPSocket).to receive(:new).with(domain.fqdn, port).and_return(tcpsocket_double)
+          expect(OpenSSL::SSL::SSLSocket).to receive(:new).with(tcpsocket_double, sslcontext_double).
+              and_return(sslsocket_double)
+          expect(sslsocket_double).to receive(:connect).and_return(sslsocket_double)
+          expect(sslsocket_double).to receive(:peer_cert).and_return(cert)
 
-      domain.check_certificate
+          domain.check_certificate
+
+          expect(Domain.find_by_fqdn(fqdn).certificate_expiring).to be_falsey
+        end
+      end
     end
   end
 end
