@@ -106,4 +106,4 @@ jobs:
       - name: which bundler
         run: which bundler
       - name: Run tests
-        run: bundle exec rspec
+        run: bundle exec rspec --format documentation
