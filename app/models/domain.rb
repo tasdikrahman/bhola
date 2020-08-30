@@ -7,6 +7,9 @@ class Domain < ApplicationRecord
     ssl_socket = OpenSSL::SSL::SSLSocket.new(socket, ctx)
     ssl_socket.connect
     ssl_certificate = ssl_socket.peer_cert
-    self.certificate_expiring = true unless ssl_certificate.not_after < Time.now.utc
+    if ssl_certificate.not_after < Time.now.utc
+      self.certificate_expiring = true
+      self.save
+    end
   end
 end
