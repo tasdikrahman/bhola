@@ -103,5 +103,9 @@ jobs:
         run: |
           bin/rails db:setup
 
+      - name: which bundler
+        run: which bundler
+      - name: bundle exec rspec
+        run: bundle exec rspec
       - name: Run tests
         run: bin/rspec
