@@ -70,7 +70,6 @@ $ bundle exec rspec
 ```
 
 ### Api docs
-
 - inserting domain to be tracked
 ```
 $ curl --location --request POST 'localhost:3000/api/v1/domains' \
@@ -84,7 +83,6 @@ $ curl --location --request POST 'localhost:3000/api/v1/domains' \
 $ curl --location --request GET 'localhost:3000/api/v1/domains/1'
 ```
 
-
 ### What bhola is not/will not be
 
 - will not generate certificates for you by being the intermediate broker
@@ -93,10 +91,10 @@ $ curl --location --request GET 'localhost:3000/api/v1/domains/1'
 
 ## Progress
 
-- [ ] Run specs in CI with each push
-- [ ] v0.1
+- [ ] v0.1 [https://github.com/tasdikrahman/bhola/milestone/1](https://github.com/tasdikrahman/bhola/milestone/1)
 
 ### Backlog
 
 - Send notifications to slack/mail.
-- Have a front end to insert/show the domains which have expired
+    - send it to the user mentioned email id's, for each domain
+- Have a front end to insert/show the domains which have expired/when they are expiring
