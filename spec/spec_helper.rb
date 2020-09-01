@@ -16,6 +16,7 @@
 
 require 'simplecov'
 SimpleCov.start
+SimpleCov.minimum_coverage 98
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
