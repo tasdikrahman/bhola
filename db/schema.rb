@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_15_094849) do
+ActiveRecord::Schema.define(version: 20_200_815_094_849) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension 'plpgsql'
 
-  create_table "domains", force: :cascade do |t|
-    t.string "fqdn", null: false
-    t.boolean "certificate_expiring", default: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["fqdn"], name: "index_domains_on_fqdn", unique: true
+  create_table 'domains', force: :cascade do |t|
+    t.string 'fqdn', null: false
+    t.boolean 'certificate_expiring', default: false
+    t.datetime 'created_at', precision: 6, null: false
+    t.datetime 'updated_at', precision: 6, null: false
+    t.index ['fqdn'], name: 'index_domains_on_fqdn', unique: true
   end
 end

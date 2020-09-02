@@ -9,20 +9,20 @@ module Api
         domain = Domain.new(fqdn: fqdn)
         if domain.valid?
           domain.save!
-          render :json => { :data => { 'fqdn': fqdn }, :errors => [] }, status: :created and return
+          render :json => { :data => { 'fqdn': fqdn }, :errors => [] }, :status => :created and return
         end
-        render :json => {:data => { 'fqdn': fqdn }, :errors => ['domain already is already being tracked']},
-               status: :unprocessable_entity and return
+        render :json => { :data => { 'fqdn': fqdn }, :errors => ['domain already is already being tracked'] },
+               :status => :unprocessable_entity and return
       end
 
       def show
-        domain = Domain.find_by_id(params[:id])
+        domain = Domain.find_by(id: params[:id])
         unless domain.nil?
-          render :json => {:data => {'fqdn': domain.fqdn, 'certificate_expiring': domain.certificate_expiring },
-                           :errors => []}, status: :ok and return
+          render :json => { :data => {'fqdn': domain.fqdn, 'certificate_expiring': domain.certificate_expiring },
+                            :errors => []}, :status => :ok and return
         end
         render :json => {:data => [],
-                         :errors => ["requested id: #{params[:id]} doesn't exist"]}, status: :not_found and return
+                         :errors => ["requested id: #{params[:id]} doesn't exist"]}, :status => :not_found and return
       end
     end
   end

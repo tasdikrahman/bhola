@@ -7,54 +7,11 @@
 # versions of RuboCop, may require this file to be generated again.
 
 # Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, IndentationWidth.
-# SupportedStyles: aligned, indented
-Layout/MultilineOperationIndentation:
-  Exclude:
-    - 'bin/bundle'
-
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: Whitelist, AllowedMethods, AllowedReceivers.
-# Whitelist: find_by_sql
-# AllowedMethods: find_by_sql
-# AllowedReceivers: Gem::Specification
-Rails/DynamicFindBy:
-  Exclude:
-    - 'app/controllers/api/v1/domains_controller.rb'
-    - 'spec/models/domain_spec.rb'
-
-# Offense count: 1
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: slashes, arguments
 Rails/FilePath:
   Exclude:
     - 'config/environments/development.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: NotNilAndNotEmpty, NotBlank, UnlessBlank.
-Rails/Present:
-  Exclude:
-    - 'bin/bundle'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/BlockComments:
-  Exclude:
-    - 'spec/spec_helper.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, ProceduralMethods, FunctionalMethods, IgnoredMethods, AllowBracesOnProceduralOneLiners, BracesRequiredMethods.
-# SupportedStyles: line_count_based, semantic, braces_for_chaining, always_braces
-# ProceduralMethods: benchmark, bm, bmbm, create, each_with_object, measure, new, realtime, tap, with_object
-# FunctionalMethods: let, let!, subject, watch
-# IgnoredMethods: lambda, proc, it
-Style/BlockDelimiters:
-  Exclude:
-    - 'spec/models/domain_spec.rb'
 
 # Offense count: 9
 Style/Documentation:
@@ -71,99 +28,9 @@ Style/Documentation:
     - 'db/migrate/20200815065332_add_default_value_to_certificate_expiring_in_domains.rb'
     - 'db/migrate/20200815094849_add_fqdn_index_to_domain.rb'
 
-# Offense count: 3
-# Cop supports --auto-correct.
-Style/ExpandPathArguments:
-  Exclude:
-    - 'bin/bundle'
-    - 'bin/rails'
-    - 'bin/rake'
-
-# Offense count: 46
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: always, always_true, never
-Style/FrozenStringLiteralComment:
-  Enabled: false
-
 # Offense count: 1
 # Configuration parameters: MinBodyLength.
 Style/GuardClause:
   Exclude:
     - 'app/models/domain.rb'
 
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, UseHashRocketsWithSymbolValues, PreferHashRocketsForNonAlnumEndingSymbols.
-# SupportedStyles: ruby19, hash_rockets, no_mixed_keys, ruby19_no_mixed_keys
-Style/HashSyntax:
-  Exclude:
-    - 'app/controllers/api/v1/domains_controller.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/IfUnlessModifier:
-  Exclude:
-    - 'bin/bundle'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: MinDigits, Strict.
-Style/NumericLiterals:
-  Exclude:
-    - 'db/schema.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/PerlBackrefs:
-  Exclude:
-    - 'bin/bundle'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/RedundantBegin:
-  Exclude:
-    - 'bin/yarn'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/RedundantSelf:
-  Exclude:
-    - 'app/models/domain.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: .
-# SupportedStyles: use_perl_names, use_english_names
-Style/SpecialGlobalVars:
-  EnforcedStyle: use_perl_names
-
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/StderrPuts:
-  Exclude:
-    - 'bin/yarn'
-
-# Offense count: 66
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiterals:
-  Exclude:
-    - 'bin/bundle'
-    - 'bin/webpack'
-    - 'bin/webpack-dev-server'
-    - 'bin/yarn'
-    - 'config/environments/production.rb'
-    - 'config/puma.rb'
-    - 'config/spring.rb'
-    - 'db/schema.rb'
-    - 'spec/models/domain_spec.rb'
-    - 'spec/rails_helper.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: MinSize, WordRegex.
-# SupportedStyles: percent, brackets
-Style/WordArray:
-  EnforcedStyle: brackets
