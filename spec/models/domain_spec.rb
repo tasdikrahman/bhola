@@ -34,8 +34,9 @@ RSpec.describe Domain, type: :model do
     let(:port) { 443 }
 
     context 'connection is successfull' do
-      let(:cert_name) { OpenSSL::X509::Name.new [['CN', 'www.github.com'], ['O', 'Github\, Inc.'], ['L', 'San Francisco'],
-                                                 ['ST', 'California'], ['C', 'US']]
+      let(:cert_name) {
+        OpenSSL::X509::Name.new [['CN', 'www.github.com'], ['O', 'Github\, Inc.'], ['L', 'San Francisco'],
+                                 ['ST', 'California'], ['C', 'US']]
       }
       let(:cert_not_before) { Time.parse("2012-10-1 8:00:00 Pacific Time (US & Canada)").utc }
       let(:cert) { OpenSSL::X509::Certificate.new }
@@ -53,7 +54,7 @@ RSpec.describe Domain, type: :model do
           expect(OpenSSL::SSL::SSLContext).to receive(:new).and_return(sslcontext_double)
           expect(TCPSocket).to receive(:new).with(domain.fqdn, port).and_return(tcpsocket_double)
           expect(OpenSSL::SSL::SSLSocket).to receive(:new).with(tcpsocket_double, sslcontext_double).
-              and_return(sslsocket_double)
+            and_return(sslsocket_double)
           expect(sslsocket_double).to receive(:connect).and_return(sslsocket_double)
           expect(sslsocket_double).to receive(:peer_cert).and_return(cert)
 
@@ -76,7 +77,7 @@ RSpec.describe Domain, type: :model do
           expect(OpenSSL::SSL::SSLContext).to receive(:new).and_return(sslcontext_double)
           expect(TCPSocket).to receive(:new).with(domain.fqdn, port).and_return(tcpsocket_double)
           expect(OpenSSL::SSL::SSLSocket).to receive(:new).with(tcpsocket_double, sslcontext_double).
-              and_return(sslsocket_double)
+            and_return(sslsocket_double)
           expect(sslsocket_double).to receive(:connect).and_return(sslsocket_double)
           expect(sslsocket_double).to receive(:peer_cert).and_return(cert)
 

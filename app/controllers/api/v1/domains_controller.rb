@@ -9,7 +9,7 @@ module Api
         domain = Domain.new(fqdn: fqdn)
         if domain.valid?
           domain.save!
-          render :json => {:data => { 'fqdn': fqdn }, :errors => []}, status: :created and return
+          render :json => { :data => { 'fqdn': fqdn }, :errors => [] }, status: :created and return
         end
         render :json => {:data => { 'fqdn': fqdn }, :errors => ['domain already is already being tracked']},
                status: :unprocessable_entity and return
