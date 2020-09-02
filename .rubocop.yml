@@ -1,0 +1,56 @@
+inherit_from:
+  - .rubocop_todo.yml
+
+require:
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-minitest
+
+AllCops:
+  TargetRubyVersion: 2.5.3
+  TargetRailsVersion: 6.0
+  Exclude:
+    - 'extras/**/*'
+    - 'locale/**/*'
+    - 'node_modules/**/*'
+    - 'vendor/**/*'
+
+# Just so it looks like core Foreman
+Layout/DotPosition:
+  EnforcedStyle: 'trailing'
+
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+
+Layout/LineLength:
+  Enabled: false
+
+Metrics:
+  Enabled: false
+
+Performance/RegexpMatch:
+  Enabled: false
+
+Rails:
+  Enabled: true
+
+Rails/ActionFilter:
+  EnforcedStyle: action
+
+Rails/ContentTag:
+  Enabled: false
+
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Style/FormatStringToken:
+  EnforcedStyle: template
+
+Style/HashSyntax:
+  EnforcedStyle: no_mixed_keys
+
+Style/RaiseArgs:
+  EnforcedStyle: compact
+
+Style/SymbolArray:
+  EnforcedStyle: brackets
