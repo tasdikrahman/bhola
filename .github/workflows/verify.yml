@@ -10,9 +10,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.5.3
       - name: Ruby gem cache
         uses: actions/cache@v1
         with:
@@ -43,9 +44,9 @@ jobs:
         run: |
           yarn install --pure-lockfile
 
-#      - name: Run linters
-#        run: |
-#          bin/rubocop --parallel
+      - name: Run rubocop
+        run: |
+          bundle exec rubocop
 
   tests:
     name: Tests
