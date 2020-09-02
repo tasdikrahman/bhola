@@ -20,11 +20,11 @@ module Api
       def show
         domain = Domain.find_by(id: params[:id])
         unless domain.nil?
-          render :json => { :data => {'fqdn': domain.fqdn, 'certificate_expiring': domain.certificate_expiring },
+          render :json => { :data => { 'fqdn': domain.fqdn, 'certificate_expiring': domain.certificate_expiring },
                             :errors => [] }, :status => :ok and return
         end
-        render :json => {:data => [],
-                         :errors => ["requested id: #{params[:id]} doesn't exist"]}, :status => :not_found and return
+        render :json => { :data => [],
+                          :errors => ["requested id: #{params[:id]} doesn't exist"] }, :status => :not_found and return
       end
     end
   end
