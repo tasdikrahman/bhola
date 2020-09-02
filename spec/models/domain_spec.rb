@@ -35,7 +35,8 @@ RSpec.describe Domain, type: :model do
 
     context 'connection is successfull' do
       let(:cert_name) { OpenSSL::X509::Name.new [['CN', 'www.github.com'], ['O', 'Github\, Inc.'], ['L', 'San Francisco'],
-                                                 ['ST', 'California'], ['C', 'US']] }
+                                                 ['ST', 'California'], ['C', 'US']]
+      }
       let(:cert_not_before) { Time.parse("2012-10-1 8:00:00 Pacific Time (US & Canada)").utc }
       let(:cert) { OpenSSL::X509::Certificate.new }
 

@@ -6,17 +6,17 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
       let(:input_fqdn) { 'foo.example.com' }
       let(:params) do
         {
-            'fqdn' => input_fqdn
+          'fqdn' => input_fqdn
         }
       end
 
       context 'and it doesn\'t exist in the db' do
         let(:expected_response) do
           {
-              'data' => {
-                  'fqdn' => input_fqdn
-              },
-              'errors' => []
+            'data' => {
+              'fqdn' => input_fqdn
+            },
+            'errors' => []
           }.to_json
         end
 
@@ -33,10 +33,10 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
       context 'and it already is being tracked' do
         let(:expected_response) do
           {
-              'data' => {
-                  'fqdn' => input_fqdn
-              },
-              'errors' => ['domain already is already being tracked']
+            'data' => {
+              'fqdn' => input_fqdn
+            },
+            'errors' => ['domain already is already being tracked']
           }.to_json
         end
 
@@ -62,11 +62,11 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
         let!(:domain) { Domain.create(fqdn: input_fqdn) }
         let(:expected_response) do
           {
-              'data' => {
-                  'fqdn' => input_fqdn,
-                  'certificate_expiring' => false
-              },
-              'errors' => []
+            'data' => {
+              'fqdn' => input_fqdn,
+              'certificate_expiring' => false
+            },
+            'errors' => []
           }.to_json
         end
 
@@ -83,8 +83,8 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
         let(:input_id) { 1 }
         let(:expected_response) do
           {
-              'data' => [],
-              'errors' => ["requested id: #{input_id} doesn't exist"]
+            'data' => [],
+            'errors' => ["requested id: #{input_id} doesn't exist"]
           }.to_json
         end
 
