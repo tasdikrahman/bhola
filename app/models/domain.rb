@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Domain < ApplicationRecord
   validates :fqdn, presence: true, uniqueness: true
 
