@@ -1,0 +1,8 @@
+## value in days, if the certificate expiry is happening lower than this value
+## then the domain owner be notified
+test:
+  certificate_expiry_threshold: "10"
+development:
+  certificate_expiry_threshold: "10"
+production:
+  certificate_expiry_threshold: "10"

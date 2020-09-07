@@ -9,7 +9,7 @@ class Domain < ApplicationRecord
     ssl_socket = OpenSSL::SSL::SSLSocket.new(socket, ctx)
     ssl_socket.connect
     ssl_certificate = ssl_socket.peer_cert
-    if ssl_certificate.not_after < Time.now.utc
+    if ssl_certificate.not_after < (Time.now.utc + Figaro.env.certificate_expiry_threshold.to_i.days)
       self.certificate_expiring = true
       save
     end

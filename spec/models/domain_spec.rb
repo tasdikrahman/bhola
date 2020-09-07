@@ -43,8 +43,15 @@ RSpec.describe Domain, type: :model do
       let(:cert_not_before) { Time.parse('2012-10-1 8:00:00 Pacific Time (US & Canada)').utc }
       let(:cert) { OpenSSL::X509::Certificate.new }
 
-      context 'the certificate is valid' do
+      context 'the certificate expiry date is outside of the buffer period set' do
         let(:cert_not_after) { Time.parse('2030-10-1 8:00:00 Pacific Time (US & Canada)').utc }
+        let(:threshold_days) { '10' }
+        let(:time_now_stub) { Time.parse('2020-6-2 8:00:00 Pacific Time (US & Canada)').utc }
+
+        before(:each) do
+          allow(Figaro).to receive_message_chain(:env, :certificate_expiry_threshold).and_return(threshold_days)
+          allow(Time).to receive(:now).and_return(time_now_stub)
+        end
 
         it 'does nothing to the certificate_expiring field' do
           cert.subject = cert_name
@@ -66,8 +73,15 @@ RSpec.describe Domain, type: :model do
         end
       end
 
-      context 'the certificate has expired' do
-        let(:cert_not_after) { Time.parse('2020-6-1 8:00:00 Pacific Time (US & Canada)').utc }
+      context 'the certificate is about to expire within the buffer period set' do
+        let(:cert_not_after) { Time.parse('2020-6-10 8:00:00 Pacific Time (US & Canada)').utc }
+        let(:threshold_days) { '10' }
+        let(:time_now_stub) { Time.parse('2020-6-2 8:00:00 Pacific Time (US & Canada)').utc }
+
+        before(:each) do
+          allow(Figaro).to receive_message_chain(:env, :certificate_expiry_threshold).and_return(threshold_days)
+          allow(Time).to receive(:now).and_return(time_now_stub)
+        end
 
         it 'updates the certificate_expiring field to be true' do
           cert.subject = cert_name
