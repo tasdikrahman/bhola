@@ -65,6 +65,7 @@ $ sudo pacman -S postgresql-libs
 
 ```
 # assuming you have run are running the postgres container already
+$ cp config/application.sample.yaml config/application.yml
 $ RAILS_ENV=test rails db:drop db:create db:migrate
 $ bundle exec rspec
 ```

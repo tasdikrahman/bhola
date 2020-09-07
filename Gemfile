@@ -34,6 +34,7 @@ gem 'rubocop-minitest', '~> 0.9.0'
 gem 'rubocop-performance', '~> 1.5.2'
 gem 'rubocop-rails', '~> 2.7.1'
 
+gem 'figaro', '~> 1.2.0'
 gem 'pg', '~> 1.2.3'
 gem 'pry', '~> 0.12.0'
 
