@@ -5,7 +5,12 @@ class Domain < ApplicationRecord
 
   def check_certificate
     ctx = OpenSSL::SSL::SSLContext.new
-    socket = TCPSocket.new(fqdn, 443)
+    begin
+      socket = TCPSocket.new(fqdn, 443)
+    rescue SocketError => e
+      Rails.logger.error("Error connecting to #{fqdn}, error: #{e}")
+      return
+    end
     ssl_socket = OpenSSL::SSL::SSLSocket.new(socket, ctx)
     ssl_socket.connect
     ssl_certificate = ssl_socket.peer_cert

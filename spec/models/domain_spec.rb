@@ -82,5 +82,21 @@ RSpec.describe Domain, type: :model do
         end
       end
     end
+
+    context 'connection is unsuccessful' do
+      context 'when domain inserted is not a valid domain' do
+        let(:fqdn) { 'invalid-domain.com' }
+        let(:error_message) { 'getaddrinfo: Name or service not known' }
+
+        it 'logs a SocketError with getaddrinfo' do
+          allow(TCPSocket).to receive(:new).with(fqdn, port).and_raise(SocketError, error_message)
+          allow(Rails.logger).to receive(:error)
+
+          domain.check_certificate
+
+          expect(Rails.logger).to have_received(:error).with("Error connecting to #{fqdn}, error: #{error_message}")
+        end
+      end
+    end
   end
 end
