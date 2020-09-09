@@ -104,6 +104,7 @@ RSpec.describe Domain, type: :model do
 
             expect(Rails.logger).to have_received(:error).
               with("error: #{error_message}, does fqdn: #{fqdn} even having a cert attached?")
+            expect(domain.errors.full_messages).to eq(["Sslv3 error {:message=>\"#{error_message}\"}"])
           end
         end
       end
@@ -122,6 +123,7 @@ RSpec.describe Domain, type: :model do
         domain.check_certificate
 
         expect(Rails.logger).to have_received(:error).with("Error connecting to #{fqdn}, error: #{error_message}")
+        expect(domain.errors.full_messages).to eq(["Socket error {:message=>\"#{error_message}\"}"])
       end
     end
   end
