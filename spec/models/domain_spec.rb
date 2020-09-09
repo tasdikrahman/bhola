@@ -83,6 +83,30 @@ RSpec.describe Domain, type: :model do
           end
         end
       end
+
+      context 'connection in un-successfull' do
+        context 'domain doesn\'t have an ssl cert attached' do
+          let(:error_message) { 'SSL_connect returned=1 errno=0 state=error: sslv3 alert handshake failure' }
+
+          it 'logs a SSLError with sslv3 handshake failure' do
+            tcpsocket_double = double(TCPSocket)
+            sslcontext_double = double(OpenSSL::SSL::SSLContext)
+            sslsocket_double = double(OpenSSL::SSL::SSLSocket)
+            expect(OpenSSL::SSL::SSLContext).to receive(:new).and_return(sslcontext_double)
+            expect(TCPSocket).to receive(:new).with(domain.fqdn, port).and_return(tcpsocket_double)
+            expect(OpenSSL::SSL::SSLSocket).to receive(:new).with(tcpsocket_double, sslcontext_double).
+              and_return(sslsocket_double)
+
+            allow(sslsocket_double).to receive(:connect).and_raise(OpenSSL::SSL::SSLError, error_message)
+            allow(Rails.logger).to receive(:error)
+
+            domain.check_certificate
+
+            expect(Rails.logger).to have_received(:error).
+              with("error: #{error_message}, does fqdn: #{fqdn} even having a cert attached?")
+          end
+        end
+      end
     end
 
     context 'domain inserted is not registered' do
