@@ -19,18 +19,28 @@ RSpec.describe CheckCertificateJob, type: :job do
     end
 
     context 'when there are domains being tracked' do
-      context 'when the domain tracked is not expiring within the buffer timezone' do
-        let(:fqdn) { 'foo.example.com' }
-        let!(:domain) { Domain.create(fqdn: fqdn) }
+      let(:fqdn) { 'foo.example.com' }
+      let!(:domain) { Domain.create(fqdn: fqdn) }
 
+      context 'when the domain tracked is not expiring within the buffer timezone' do
         it 'will log via rails logger that no tracked domains are expiring within the buffer period' do
           allow(Rails.logger).to receive(:info)
           allow_any_instance_of(Domain).to receive(:certificate_expiring?).and_return(false)
 
           CheckCertificateJob.perform_now
 
-          expect(Rails.logger).to have_received(:info).
-            with("#{fqdn} is not expiring within the buffer period")
+          expect(Rails.logger).to have_received(:info).with("#{fqdn} is not expiring within the buffer period")
+        end
+      end
+
+      context 'when the domain tracked is expiring within the buffer timezone' do
+        it 'will log via rails logger that the domain is expiring within the buffer period' do
+          allow(Rails.logger).to receive(:info)
+          allow_any_instance_of(Domain).to receive(:certificate_expiring?).and_return(true)
+
+          CheckCertificateJob.perform_now
+
+          expect(Rails.logger).to have_received(:info).with("#{fqdn} is expiring within the buffer period")
         end
       end
     end

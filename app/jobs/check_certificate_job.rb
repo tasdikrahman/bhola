@@ -9,7 +9,11 @@ class CheckCertificateJob < ApplicationJob
     end
     domains = Domain.all
     domains.each do |domain|
-      Rails.logger.info("#{domain.fqdn} is not expiring within the buffer period") unless domain.certificate_expiring?
+      if domain.certificate_expiring?
+        Rails.logger.info("#{domain.fqdn} is expiring within the buffer period")
+      else
+        Rails.logger.info("#{domain.fqdn} is not expiring within the buffer period")
+      end
     end
   end
 end
