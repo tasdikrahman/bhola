@@ -30,7 +30,7 @@ RSpec.describe Domain, type: :model do
     expect(Domain.all.count).to eq(1)
   end
 
-  context '#check_certificate' do
+  context '#certificate_expiring?' do
     context 'domain inserted is registered' do
       let(:fqdn) { 'example.com' }
       let(:domain) { Domain.create(fqdn: fqdn) }
@@ -66,20 +66,22 @@ RSpec.describe Domain, type: :model do
         context 'the certificate expiry date is outside of the buffer period set' do
           let(:cert_not_after) { Time.parse('2030-10-1 8:00:00 Pacific Time (US & Canada)').utc }
 
-          it 'does nothing to the certificate_expiring field' do
-            domain.check_certificate
+          it 'returns false and does nothing to the certificate_expiring field' do
+            got = domain.certificate_expiring?
 
-            expect(Domain.find_by(fqdn: fqdn).certificate_expiring).to be_falsey
+            expect(got).to be false
+            expect(Domain.find_by(fqdn: fqdn).certificate_expiring).to be false
           end
         end
 
         context 'the certificate is about to expire within the buffer period set' do
           let(:cert_not_after) { Time.parse('2020-6-10 8:00:00 Pacific Time (US & Canada)').utc }
 
-          it 'updates the certificate_expiring field to be true' do
-            domain.check_certificate
+          it 'returns true and updates the certificate_expiring field to be true' do
+            got = domain.certificate_expiring?
 
-            expect(Domain.find_by(fqdn: fqdn).certificate_expiring).to be_truthy
+            expect(got).to be true
+            expect(Domain.find_by(fqdn: fqdn).certificate_expiring).to be true
           end
         end
       end
@@ -100,7 +102,7 @@ RSpec.describe Domain, type: :model do
             allow(sslsocket_double).to receive(:connect).and_raise(OpenSSL::SSL::SSLError, error_message)
             allow(Rails.logger).to receive(:error)
 
-            domain.check_certificate
+            domain.certificate_expiring?
 
             expect(Rails.logger).to have_received(:error).
               with("error: #{error_message}, does fqdn: #{fqdn} even having a cert attached?")
@@ -120,7 +122,7 @@ RSpec.describe Domain, type: :model do
         allow(TCPSocket).to receive(:new).with(fqdn, port).and_raise(SocketError, error_message)
         allow(Rails.logger).to receive(:error)
 
-        domain.check_certificate
+        domain.certificate_expiring?
 
         expect(Rails.logger).to have_received(:error).with("Error connecting to #{fqdn}, error: #{error_message}")
         expect(domain.errors.full_messages).to eq(["Socket error {:message=>\"#{error_message}\"}"])
