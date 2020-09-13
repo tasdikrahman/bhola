@@ -2,7 +2,7 @@
 
 # CheckCertificateJob will iterate over all the Domain objects stored and call the method #check_certificate on it
 class CheckCertificateJob < ApplicationJob
-  def perform(*args)
+  def perform(*_args)
     if Domain.all.count.zero?
       Rails.logger.info('No domains are tracked as of now, please insert domains to be tracked')
       return
