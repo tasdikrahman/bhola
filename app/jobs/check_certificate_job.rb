@@ -1,0 +1,2 @@
+class CheckCertificateJob < ApplicationJob
+end

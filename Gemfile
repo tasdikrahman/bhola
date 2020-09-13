@@ -5,9 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.5.3'
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.0.3', '>= 6.0.3.2'
-# Use sqlite3 as the database for Active Record
 # Use Puma as the app server
 gem 'puma', '~> 4.1'
 # Use SCSS for stylesheets
@@ -34,6 +32,7 @@ gem 'rubocop-minitest', '~> 0.9.0'
 gem 'rubocop-performance', '~> 1.5.2'
 gem 'rubocop-rails', '~> 2.7.1'
 
+gem 'clockwork', '~> 2.0.3'
 gem 'figaro', '~> 1.2.0'
 gem 'pg', '~> 1.2.3'
 gem 'pry', '~> 0.12.0'
