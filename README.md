@@ -16,7 +16,7 @@ time interval, each and every domain in it's database
         - don't do anything
 - the timeframe should be configurable via env var
 - Should have a route to insert/query domains
-- `/api/v1/domains` `GET` should return the list of domains stored
+- `/api/v1/domains` `GET` should return the list of all domains stored
 - `/api/v1/domains POST -d {'domain': 'foo.example.com'}` should return 201 Created and store the domain in the db
 
 ##### Assumptions for v0.1
@@ -92,9 +92,22 @@ $ curl --location --request POST 'localhost:3000/api/v1/domains' \
     "fqdn": "foo.example.com"
 }'
 ```
-- querying a domain stored
+- querying the domains stored
 ```
 $ curl --location --request GET 'localhost:3000/api/v1/domains/1'
+{
+  "data": [
+    {
+      "fqdn": "foo.example.com",
+      "certificate_expiring": false
+    },
+    {
+      "fqdn": "bar.example.com",
+      "certificate_expiring": false
+    }
+  ],
+  "errors": []
+}
 ```
 
 ### What bhola is not/will not be
