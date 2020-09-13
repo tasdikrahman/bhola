@@ -1,23 +1,36 @@
 # BHOLA
 ### Problem statement
 
-- No visibility about when the certificate, of when is it expiring
+- No visibility about when the certificate is expiring
 - No alerts in form of email or test message when the certificate is expiring
-- Very reactive in nature on when the certificate expires
+
+which makes the process very reactive when the certificate expires
 
 #### v0.1
 
-- Will have a list of domains which it queries, which gets triggered by a schedule processor which checks every day on
-a specific time, each and every domain in it's database
+- Will have a list of domains which it queries, which gets triggered by a scheduled job which checks on a predefined
+time interval, each and every domain in it's database
     - if the domain has expired
         - mark it as expired in the database 
     - if the domain has not expired
         - don't do anything
-- the timeframe as of now can be set to 10days before the certificate expires
-- Rails console to be used to insert into the database for now. 
+- the timeframe should be configurable via env var
+- Should have a route to insert/query domains
 - `/api/v1/domains` `GET` should return the list of domains stored
-- `/api/v1/domains POST -d {'domain': 'foo.example.com'}` should return 201 Created and store the domain in the db if
-the domain is of valid format.
+- `/api/v1/domains POST -d {'domain': 'foo.example.com'}` should return 201 Created and store the domain in the db
+
+##### Assumptions for v0.1
+
+- the user is inserting a valid domain which also has an ssl certificate attached to it
+
+## Running it
+
+```
+# start server process
+$ bundle exec rails s -b 0.0.0.0 -p 3000
+# start the clockwork process
+$ bundle exec clockwork clock.rb
+```
 
 ## Dev setup
 
@@ -99,3 +112,6 @@ $ curl --location --request GET 'localhost:3000/api/v1/domains/1'
 - Send notifications to slack/mail.
     - send it to the user mentioned email id's, for each domain
 - Have a front end to insert/show the domains which have expired/when they are expiring
+- Validate the domain being inserted
+    - whether it's a valid registered domain or not
+    - has an x509 cert attached to it
