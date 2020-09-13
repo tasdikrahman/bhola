@@ -17,14 +17,21 @@ module Api
                :status => :unprocessable_entity and return
       end
 
-      def show
-        domain = Domain.find_by(id: params[:id])
-        unless domain.nil?
-          render :json => { :data => { 'fqdn': domain.fqdn, 'certificate_expiring': domain.certificate_expiring },
-                            :errors => [] }, :status => :ok and return
+      def index
+        if Domain.any?
+          domain_list = []
+          Domain.all.each do |domain|
+            domain_list = Array(domain_list).push(
+              {
+                'fqdn': domain.fqdn,
+                'certificate_expiring': domain.certificate_expiring
+              }
+            )
+          end
+          render :json => { :data => domain_list, :errors => [] }, :status => :ok
+        else
+          render :json => { :data => [], :errors => [] }, :status => :ok
         end
-        render :json => { :data => [],
-                          :errors => ["requested id: #{params[:id]} doesn't exist"] }, :status => :not_found and return
       end
     end
   end

@@ -58,22 +58,30 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
 
   describe 'GET #show' do
     context 'user requests for a domain resource' do
-      let(:input_fqdn) { 'foo.example.com' }
+      let(:input_fqdn_1) { 'foo.example.com' }
+      let(:input_fqdn_2) { 'bar.example.com' }
 
-      context 'the id exists' do
-        let!(:domain) { Domain.create(fqdn: input_fqdn) }
+      context 'there are domains being tracked' do
+        let!(:domain1) { Domain.create(fqdn: input_fqdn_1) }
+        let!(:domain2) { Domain.create(fqdn: input_fqdn_2) }
         let(:expected_response) do
           {
-            'data' => {
-              'fqdn' => input_fqdn,
-              'certificate_expiring' => false
-            },
+            'data' => [
+              {
+                'fqdn' => input_fqdn_1,
+                'certificate_expiring' => false
+              },
+              {
+                'fqdn' => input_fqdn_2,
+                'certificate_expiring' => false
+              }
+            ],
             'errors' => []
           }.to_json
         end
 
-        it 'returns back the fqdn associated with that id' do
-          get :show, params: { id: domain.id }
+        it 'returns back the domains and it\'s fqdn and certificate_expiring field' do
+          get :index
 
           expect(response).to have_http_status(200)
           expect(response.content_type).to eq('application/json; charset=utf-8')
@@ -81,19 +89,18 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
         end
       end
 
-      context 'the id doesn\'t exists' do
-        let(:input_id) { 1 }
+      context 'there are no domains being tracked' do
         let(:expected_response) do
           {
             'data' => [],
-            'errors' => ["requested id: #{input_id} doesn't exist"]
+            'errors' => []
           }.to_json
         end
 
-        it 'returns back the error message that the id doesn\'t exist' do
-          get :show, params: { id: input_id }
+        it 'returns back empty data' do
+          get :index
 
-          expect(response).to have_http_status(404)
+          expect(response).to have_http_status(200)
           expect(response.content_type).to eq('application/json; charset=utf-8')
           expect(response.body).to eq(expected_response)
         end
