@@ -7,8 +7,7 @@ class CheckCertificateJob < ApplicationJob
       Rails.logger.info('No domains are tracked as of now, please insert domains to be tracked')
       return
     end
-    domains = Domain.all
-    domains.each do |domain|
+    Domain.all.each do |domain|
       if domain.certificate_expiring?
         Rails.logger.info("#{domain.fqdn} is expiring within the buffer period")
       else
