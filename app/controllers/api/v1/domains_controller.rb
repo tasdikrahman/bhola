@@ -28,11 +28,10 @@ module Api
               }
             )
           end
-          render :json => { :data => domain_list,
-                            :errors => [] }, :status => :ok and return
+          render :json => { :data => domain_list, :errors => [] }, :status => :ok
+        else
+          render :json => { :data => [], :errors => [] }, :status => :ok
         end
-        render :json => { :data => [],
-                          :errors => [] }, :status => :ok
       end
     end
   end
