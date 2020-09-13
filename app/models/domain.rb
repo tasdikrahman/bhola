@@ -3,7 +3,7 @@
 class Domain < ApplicationRecord
   validates :fqdn, presence: true, uniqueness: true
 
-  def check_certificate
+  def certificate_expiring?
     ctx = OpenSSL::SSL::SSLContext.new
     begin
       socket = TCPSocket.new(fqdn, 443)
@@ -13,6 +13,9 @@ class Domain < ApplicationRecord
       if ssl_certificate.not_after < (Time.now.utc + Figaro.env.certificate_expiry_threshold.to_i.days)
         self.certificate_expiring = true
         save
+        true
+      else
+        false
       end
     rescue SocketError => e
       Rails.logger.error("Error connecting to #{fqdn}, error: #{e}")

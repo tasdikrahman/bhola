@@ -2,7 +2,10 @@
 ## then the domain owner be notified
 test:
   certificate_expiry_threshold: "10"
+  check_certificate_job_retrigger_threshold: "86400"
 development:
+  check_certificate_job_retrigger_threshold: "86400"
   certificate_expiry_threshold: "10"
 production:
+  check_certificate_job_retrigger_threshold: "86400"
   certificate_expiry_threshold: "10"
