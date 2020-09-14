@@ -56,54 +56,75 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
     end
   end
 
-  describe 'GET #show' do
-    context 'user requests for a domain resource' do
-      let(:input_fqdn_1) { 'foo.example.com' }
-      let(:input_fqdn_2) { 'bar.example.com' }
+  describe 'GET #index' do
+    context 'format json' do
+      context 'user requests for a domain resource' do
+        let(:input_fqdn_1) { 'foo.example.com' }
+        let(:input_fqdn_2) { 'bar.example.com' }
 
-      context 'there are domains being tracked' do
-        let!(:domain1) { Domain.create(fqdn: input_fqdn_1) }
-        let!(:domain2) { Domain.create(fqdn: input_fqdn_2) }
-        let(:expected_response) do
-          {
-            'data' => [
-              {
-                'fqdn' => input_fqdn_1,
-                'certificate_expiring' => false
-              },
-              {
-                'fqdn' => input_fqdn_2,
-                'certificate_expiring' => false
-              }
-            ],
-            'errors' => []
-          }.to_json
+        before(:each) do
+          request.headers['Accept'] = 'application/json'
         end
 
-        it 'returns back the domains and it\'s fqdn and certificate_expiring field' do
-          get :index
+        context 'there are domains being tracked' do
+          let!(:domain1) { Domain.create(fqdn: input_fqdn_1) }
+          let!(:domain2) { Domain.create(fqdn: input_fqdn_2) }
+          let(:expected_response) do
+            {
+              'data' => [
+                {
+                  'fqdn' => input_fqdn_1,
+                  'certificate_expiring' => false
+                },
+                {
+                  'fqdn' => input_fqdn_2,
+                  'certificate_expiring' => false
+                }
+              ],
+              'errors' => []
+            }.to_json
+          end
 
-          expect(response).to have_http_status(200)
-          expect(response.content_type).to eq('application/json; charset=utf-8')
-          expect(response.body).to eq(expected_response)
+          it 'returns back the domains and it\'s fqdn and certificate_expiring field' do
+            get :index
+
+            expect(response).to have_http_status(200)
+            expect(response.content_type).to eq('application/json; charset=utf-8')
+            expect(response.body).to eq(expected_response)
+          end
+        end
+
+        context 'there are no domains being tracked' do
+          let(:expected_response) do
+            {
+              'data' => [],
+              'errors' => []
+            }.to_json
+          end
+
+          it 'returns back empty data' do
+            get :index
+
+            expect(response).to have_http_status(200)
+            expect(response.content_type).to eq('application/json; charset=utf-8')
+            expect(response.body).to eq(expected_response)
+          end
         end
       end
+    end
 
-      context 'there are no domains being tracked' do
-        let(:expected_response) do
-          {
-            'data' => [],
-            'errors' => []
-          }.to_json
-        end
+    context 'format html' do
+      let!(:domain) { Domain.create(fqdn: 'example.com') }
 
-        it 'returns back empty data' do
-          get :index
+      before(:each) do
+        request.headers['Accept'] = 'text/html'
+      end
 
-          expect(response).to have_http_status(200)
-          expect(response.content_type).to eq('application/json; charset=utf-8')
-          expect(response.body).to eq(expected_response)
-        end
+      it 'will have the response content type of text/html' do
+        get :index
+
+        expect(response).to have_http_status(200)
+        expect(response.content_type).to eq('text/html; charset=utf-8')
       end
     end
   end

@@ -94,7 +94,8 @@ $ curl --location --request POST 'localhost:3000/api/v1/domains' \
 ```
 - querying the domains stored
 ```
-$ curl --location --request GET 'localhost:3000/api/v1/domains/1'
+$ curl --location --request GET 'localhost:3000/api/v1/domains' \
+ --header 'Accept: application/json'
 {
   "data": [
     {
