@@ -13,7 +13,7 @@ module Api
           domain.save!
           render :json => { :data => { 'fqdn': fqdn }, :errors => [] }, :status => :created
         else
-          render :json => { :data => { 'fqdn': fqdn }, :errors => ['domain already is already being tracked'] },
+          render :json => { :data => { 'fqdn': fqdn }, :errors => ["#{fqdn} is already being tracked"] },
                  :status => :unprocessable_entity
         end
       end

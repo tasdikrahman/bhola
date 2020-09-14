@@ -38,7 +38,7 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
             'data' => {
               'fqdn' => input_fqdn
             },
-            'errors' => ['domain already is already being tracked']
+            'errors' => ["#{input_fqdn} is already being tracked"]
           }.to_json
         end
 
