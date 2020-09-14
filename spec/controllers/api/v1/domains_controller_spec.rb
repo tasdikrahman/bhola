@@ -127,7 +127,7 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
     end
   end
 
-  describe 'root route' do
+  context 'routing' do
     it 'will route / to api/v1/domains' do
       expect(get: '/').to route_to(controller: 'api/v1/domains', action: 'index')
     end
