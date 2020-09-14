@@ -21,7 +21,8 @@ module Api
       def index
         if Domain.any?
           domain_list = []
-          Domain.all.each do |domain|
+          @domains = Domain.all
+          @domains.each do |domain|
             domain_list = Array(domain_list).push(
               {
                 'fqdn': domain.fqdn,
@@ -29,9 +30,15 @@ module Api
               }
             )
           end
-          render :json => { :data => domain_list, :errors => [] }, :status => :ok
+          respond_to do |format|
+            format.html { @domains }
+            format.json { render :json => { :data => domain_list, :errors => [] }, :status => :ok }
+          end
         else
-          render :json => { :data => [], :errors => [] }, :status => :ok
+          respond_to do |format|
+            format.html { @domains }
+            format.json { render :json => { :data => [], :errors => [] }, :status => :ok }
+          end
         end
       end
     end

@@ -7,4 +7,6 @@ Rails.application.routes.draw do
       resources :domains
     end
   end
+
+  root to: 'api/v1/domains#index'
 end
