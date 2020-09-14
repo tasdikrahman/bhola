@@ -114,8 +114,6 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
     end
 
     context 'format html' do
-      let!(:domain) { Domain.create(fqdn: 'example.com') }
-
       before(:each) do
         request.headers['Accept'] = 'text/html'
       end

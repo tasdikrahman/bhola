@@ -35,7 +35,10 @@ module Api
             format.json { render :json => { :data => domain_list, :errors => [] }, :status => :ok }
           end
         else
-          render :json => { :data => [], :errors => [] }, :status => :ok
+          respond_to do |format|
+            format.html { @domains }
+            format.json { render :json => { :data => [], :errors => [] }, :status => :ok }
+          end
         end
       end
     end

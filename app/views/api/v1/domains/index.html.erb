@@ -12,12 +12,16 @@
       </thead>
 
       <tbody>
-        <% @domains.each do |domain| %>
-          <tr>
-            <td><%= domain.id %></td>
-            <td><%= domain.fqdn %></td>
-            <td><%= domain.certificate_expiring %></td>
-          </tr>
+        <% unless @domains.blank? %>
+          <% @domains.each do |domain| %>
+            <tr>
+              <td><%= domain.id %></td>
+              <td><%= domain.fqdn %></td>
+              <td><%= domain.certificate_expiring %></td>
+            </tr>
+          <% end %>
+        <% else %>
+        You don't have any entries in the database
         <% end %>
       </tbody>
     </table>
