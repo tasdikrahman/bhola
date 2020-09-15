@@ -156,4 +156,23 @@ RSpec.describe Domain, type: :model do
       end
     end
   end
+
+  context '#cert_issuer_to_s' do
+    let(:cert_issuer) do
+      OpenSSL::X509::Name.new [['CN', 'DigiCert SHA2 High Assurance Server CA'], ['O', 'DigiCert Inc'],
+                               ['OU', 'www.digicert.com'], %w[C US]]
+    end
+    let(:domain) { Domain.create(fqdn: fqdn) }
+    let(:fqdn) { 'invalid-domain.com' }
+
+    before(:each) do
+      domain.certificate_issuer = cert_issuer
+    end
+
+    it 'will return back the issuer\'s organisation name' do
+      got = domain.cert_issuer_to_s
+
+      expect(got).to eq('DigiCert Inc')
+    end
+  end
 end
