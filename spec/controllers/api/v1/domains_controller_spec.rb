@@ -128,8 +128,16 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
   end
 
   context 'routing' do
-    it 'will route / to api/v1/domains' do
+    it 'will route GET / to api/v1/domains#index' do
       expect(get: '/').to route_to(controller: 'api/v1/domains', action: 'index')
+    end
+
+    it 'will route GET /api/v1/domains to api/v1/domains#index' do
+      expect(get: 'api/v1/domains').to route_to(controller: 'api/v1/domains', action: 'index')
+    end
+
+    it 'will route POST /api/v1/domains to api/v1/domains#create' do
+      expect(post: 'api/v1/domains').to route_to(controller: 'api/v1/domains', action: 'create')
     end
   end
 end
