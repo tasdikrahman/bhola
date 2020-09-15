@@ -3,6 +3,8 @@
 class Domain < ApplicationRecord
   validates :fqdn, presence: true, uniqueness: true
 
+  CERTIFICATE_ISSUER_ORGANISATION_NAME_METADATA_KEY = 'O'
+
   def certificate_expiring?
     ctx = OpenSSL::SSL::SSLContext.new
     begin
@@ -29,5 +31,17 @@ class Domain < ApplicationRecord
       Rails.logger.error("error: #{e}, does fqdn: #{fqdn} even having a cert attached?")
       errors.add(:sslv3_error, message: e.message.to_s)
     end
+  end
+
+  def cert_issuer_to_s
+    certificate_metadata_dict = {}
+    certificate_issuer_metadata_list = certificate_issuer.split('/')
+    certificate_issuer_metadata_list.each do |metadata_element|
+      next if metadata_element.blank?
+      key = metadata_element.split('=').first
+      value = metadata_element.split('=').last
+      certificate_metadata_dict[key] = value
+    end
+    certificate_metadata_dict[CERTIFICATE_ISSUER_ORGANISATION_NAME_METADATA_KEY]
   end
 end
