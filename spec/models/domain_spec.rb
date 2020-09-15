@@ -108,7 +108,7 @@ RSpec.describe Domain, type: :model do
           it 'will store certificate issuer information for the domain' do
             domain.certificate_expiring?
 
-            expect(Domain.find_by(fqdn: fqdn).issuer).to eq(cert_issuer.to_s)
+            expect(Domain.find_by(fqdn: fqdn).certificate_issuer).to eq(cert_issuer.to_s)
           end
         end
       end
