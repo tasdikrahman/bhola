@@ -12,6 +12,7 @@ class Domain < ApplicationRecord
       ssl_certificate = ssl_socket.peer_cert
 
       self.certificate_expiring_not_before = ssl_certificate.not_before
+      self.certificate_expiring_not_after = ssl_certificate.not_after
 
       if ssl_certificate.not_after < (Time.now.utc + Figaro.env.certificate_expiry_threshold.to_i.days)
         self.certificate_expiring = true

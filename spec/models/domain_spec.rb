@@ -93,6 +93,12 @@ RSpec.describe Domain, type: :model do
 
             expect(Domain.find_by(fqdn: fqdn).certificate_expiring_not_before).to eq(cert_not_before)
           end
+
+          it 'will store not_after information for the domain' do
+            domain.certificate_expiring?
+
+            expect(Domain.find_by(fqdn: fqdn).certificate_expiring_not_after).to eq(cert_not_after)
+          end
         end
       end
 
