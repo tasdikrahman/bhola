@@ -14,6 +14,7 @@ AllCops:
     - 'locale/**/*'
     - 'node_modules/**/*'
     - 'vendor/**/*'
+    - 'db/schema.rb'
 
 # Just so it looks like core Foreman
 Layout/DotPosition:
