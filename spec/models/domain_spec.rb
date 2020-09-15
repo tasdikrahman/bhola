@@ -174,5 +174,17 @@ RSpec.describe Domain, type: :model do
 
       expect(got).to eq('DigiCert Inc')
     end
+
+    context 'when it doesn\'t have the key O in the issuer name' do
+      let(:cert_issuer) do
+        OpenSSL::X509::Name.new [['CN', 'invalid2.invalid'],
+                                 ['OU', 'No SNI provided; please fix your client']]
+      end
+      it 'will return back the complete issuer string back' do
+        got = domain.cert_issuer_to_s
+
+        expect(got).to eq(cert_issuer.to_s)
+      end
+    end
   end
 end
