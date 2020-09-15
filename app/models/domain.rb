@@ -13,6 +13,7 @@ class Domain < ApplicationRecord
 
       self.certificate_expiring_not_before = ssl_certificate.not_before
       self.certificate_expiring_not_after = ssl_certificate.not_after
+      self.issuer = ssl_certificate.issuer
 
       if ssl_certificate.not_after < (Time.now.utc + Figaro.env.certificate_expiry_threshold.to_i.days)
         self.certificate_expiring = true

@@ -41,6 +41,10 @@ RSpec.describe Domain, type: :model do
           OpenSSL::X509::Name.new [['CN', 'www.github.com'], ['O', 'Github\, Inc.'], ['L', 'San Francisco'],
                                    %w[ST California], %w[C US]]
         end
+        let(:cert_issuer) do
+          OpenSSL::X509::Name.new [['CN', 'DigiCert SHA2 High Assurance Server CA'], ['O', 'DigiCert Inc'],
+                                   ['OU', 'www.digicert.com'], %w[C US]]
+        end
         let(:cert_not_before) { Time.parse('2012-10-1 8:00:00 Pacific Time (US & Canada)').utc }
         let(:cert) { OpenSSL::X509::Certificate.new }
         let(:threshold_days) { '10' }
@@ -52,6 +56,7 @@ RSpec.describe Domain, type: :model do
           cert.subject = cert_name
           cert.not_before = cert_not_before
           cert.not_after = cert_not_after
+          cert.issuer = cert_issuer
           tcpsocket_double = double(TCPSocket)
           sslcontext_double = double(OpenSSL::SSL::SSLContext)
           sslsocket_double = double(OpenSSL::SSL::SSLSocket)
@@ -98,6 +103,12 @@ RSpec.describe Domain, type: :model do
             domain.certificate_expiring?
 
             expect(Domain.find_by(fqdn: fqdn).certificate_expiring_not_after).to eq(cert_not_after)
+          end
+
+          it 'will store certificate issuer information for the domain' do
+            domain.certificate_expiring?
+
+            expect(Domain.find_by(fqdn: fqdn).issuer).to eq(cert_issuer.to_s)
           end
         end
       end
