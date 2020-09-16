@@ -7,7 +7,10 @@
         <tr>
           <th>ID</th>
           <th>FQDN</th>
-          <th>is_expiring</th>
+          <th>Is certificate expiring</th>
+          <th>Certificate issued at</th>
+          <th>Certificate expiring at</th>
+          <th>Certificate issuer</th>
         </tr>
       </thead>
 
@@ -18,6 +21,9 @@
               <td><%= domain.id %></td>
               <td><%= domain.fqdn %></td>
               <td><%= domain.certificate_expiring %></td>
+              <td><%= domain.certificate_expiring_not_before %></td>
+              <td><%= domain.certificate_expiring_not_after %></td>
+              <td><%= domain.cert_issuer_to_s %></td>
             </tr>
           <% end %>
         <% else %>
