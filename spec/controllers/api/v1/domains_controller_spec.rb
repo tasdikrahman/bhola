@@ -30,6 +30,12 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
           expect(response.body).to eq(expected_response)
           expect(Domain.where(fqdn: input_fqdn).count).to eq(1)
         end
+
+        it 'also calls check_certificate? on the domain object' do
+          expect_any_instance_of(Domain).to receive(:certificate_expiring?)
+
+          post :create, :params => params
+        end
       end
 
       context 'and it already is being tracked' do

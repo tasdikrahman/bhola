@@ -22,6 +22,7 @@ class Domain < ApplicationRecord
         save
         true
       else
+        save
         false
       end
     rescue SocketError => e
@@ -42,6 +43,10 @@ class Domain < ApplicationRecord
       value = metadata_element.split('=').last
       certificate_metadata_dict[key] = value
     end
-    certificate_metadata_dict[CERTIFICATE_ISSUER_ORGANISATION_NAME_METADATA_KEY]
+    if certificate_metadata_dict.key?(CERTIFICATE_ISSUER_ORGANISATION_NAME_METADATA_KEY)
+      certificate_metadata_dict[CERTIFICATE_ISSUER_ORGANISATION_NAME_METADATA_KEY]
+    else
+      certificate_issuer
+    end
   end
 end
