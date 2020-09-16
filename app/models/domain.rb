@@ -22,6 +22,7 @@ class Domain < ApplicationRecord
         save
         true
       else
+        save
         false
       end
     rescue SocketError => e

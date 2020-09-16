@@ -77,6 +77,24 @@ RSpec.describe Domain, type: :model do
             expect(got).to be false
             expect(Domain.find_by(fqdn: fqdn).certificate_expiring).to be false
           end
+
+          it 'will store not_before information for the domain' do
+            domain.certificate_expiring?
+
+            expect(Domain.find_by(fqdn: fqdn).certificate_expiring_not_before).to eq(cert_not_before)
+          end
+
+          it 'will store not_after information for the domain' do
+            domain.certificate_expiring?
+
+            expect(Domain.find_by(fqdn: fqdn).certificate_expiring_not_after).to eq(cert_not_after)
+          end
+
+          it 'will store certificate issuer information for the domain' do
+            domain.certificate_expiring?
+
+            expect(Domain.find_by(fqdn: fqdn).certificate_issuer).to eq(cert_issuer.to_s)
+          end
         end
 
         context 'the certificate is about to expire within the buffer period set' do
@@ -88,10 +106,6 @@ RSpec.describe Domain, type: :model do
             expect(got).to be true
             expect(Domain.find_by(fqdn: fqdn).certificate_expiring).to be true
           end
-        end
-
-        context 'additional metadata' do
-          let(:cert_not_after) { Time.parse('2020-6-10 8:00:00 Pacific Time (US & Canada)').utc }
 
           it 'will store not_before information for the domain' do
             domain.certificate_expiring?
