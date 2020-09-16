@@ -11,6 +11,7 @@ module Api
         domain = Domain.new(fqdn: fqdn)
         if domain.valid?
           domain.save!
+          domain.certificate_expiring?
           render :json => { :data => { 'fqdn': fqdn }, :errors => [] }, :status => :created
         else
           render :json => { :data => { 'fqdn': fqdn }, :errors => ["#{fqdn} is already being tracked"] },
