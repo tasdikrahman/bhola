@@ -11,9 +11,15 @@ module Api
         domain = Domain.new(fqdn: fqdn)
         domain.set_url_scheme
         if domain.valid?
-          domain.save!
           domain.certificate_expiring?
-          render :json => { :data => { 'fqdn': domain.fqdn }, :errors => [] }, :status => :created
+          if domain.errors.any?
+            render :json => { :data => { 'fqdn': domain.fqdn },
+                              :errors => ["#{domain.fqdn} is invalid, error message: #{domain.errors.messages}"] },
+                   :status => :unprocessable_entity
+          else
+            domain.save!
+            render :json => { :data => { 'fqdn': domain.fqdn }, :errors => [] }, :status => :created
+          end
         else
           render :json => { :data => { 'fqdn': domain.fqdn }, :errors => ["#{domain.fqdn} is already being tracked"] },
                  :status => :unprocessable_entity
