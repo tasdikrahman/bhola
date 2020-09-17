@@ -13,9 +13,9 @@ module Api
         if domain.valid?
           domain.save!
           domain.certificate_expiring?
-          render :json => { :data => { 'fqdn': fqdn }, :errors => [] }, :status => :created
+          render :json => { :data => { 'fqdn': domain.fqdn }, :errors => [] }, :status => :created
         else
-          render :json => { :data => { 'fqdn': fqdn }, :errors => ["#{fqdn} is already being tracked"] },
+          render :json => { :data => { 'fqdn': domain.fqdn }, :errors => ["#{domain.fqdn} is already being tracked"] },
                  :status => :unprocessable_entity
         end
       end

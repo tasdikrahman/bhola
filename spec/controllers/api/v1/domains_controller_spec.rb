@@ -5,7 +5,8 @@ require 'rails_helper'
 RSpec.describe Api::V1::DomainsController, type: :controller do
   describe 'POST #create' do
     context 'when the user sends a domain to be tracked' do
-      let(:input_fqdn) { 'foo.example.com' }
+      let(:input_fqdn) { 'https://foo.example.com' }
+      let(:trimmed_fqdn) { 'foo.example.com' }
       let(:params) do
         {
           'fqdn' => input_fqdn
@@ -16,7 +17,7 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
         let(:expected_response) do
           {
             'data' => {
-              'fqdn' => input_fqdn
+              'fqdn' => trimmed_fqdn
             },
             'errors' => []
           }.to_json
@@ -28,7 +29,7 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
           expect(response).to have_http_status(201)
           expect(response.content_type).to eq('application/json; charset=utf-8')
           expect(response.body).to eq(expected_response)
-          expect(Domain.where(fqdn: input_fqdn).count).to eq(1)
+          expect(Domain.where(fqdn: trimmed_fqdn).count).to eq(1)
         end
 
         it 'also calls Domain#check_certificate?' do
@@ -48,14 +49,14 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
         let(:expected_response) do
           {
             'data' => {
-              'fqdn' => input_fqdn
+              'fqdn' => trimmed_fqdn
             },
-            'errors' => ["#{input_fqdn} is already being tracked"]
+            'errors' => ["#{trimmed_fqdn} is already being tracked"]
           }.to_json
         end
 
         it 'returns back the uniqueness validation error message' do
-          Domain.create!(fqdn: input_fqdn)
+          Domain.create!(fqdn: trimmed_fqdn)
 
           post :create, :params => params
 
