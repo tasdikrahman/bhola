@@ -9,6 +9,7 @@ module Api
         fqdn = params.require(:fqdn)
 
         domain = Domain.new(fqdn: fqdn)
+        domain.set_url_scheme
         if domain.valid?
           domain.save!
           domain.certificate_expiring?

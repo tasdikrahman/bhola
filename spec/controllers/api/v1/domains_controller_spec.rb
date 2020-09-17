@@ -31,8 +31,14 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
           expect(Domain.where(fqdn: input_fqdn).count).to eq(1)
         end
 
-        it 'also calls check_certificate? on the domain object' do
+        it 'also calls Domain#check_certificate?' do
           expect_any_instance_of(Domain).to receive(:certificate_expiring?)
+
+          post :create, :params => params
+        end
+
+        it 'also calls Domain#set_url_scheme to trim http/https scheme' do
+          expect_any_instance_of(Domain).to receive(:set_url_scheme)
 
           post :create, :params => params
         end
