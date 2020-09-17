@@ -49,4 +49,13 @@ class Domain < ApplicationRecord
       certificate_issuer
     end
   end
+
+  def set_url_scheme
+    uri = URI(fqdn)
+    if uri.hostname.nil?
+      self.fqdn = fqdn
+      return
+    end
+    self.fqdn = uri.hostname
+  end
 end
