@@ -52,10 +52,10 @@ class Domain < ApplicationRecord
 
   def set_url_scheme
     uri = URI(fqdn)
-    if uri.hostname.nil?
-      self.fqdn = fqdn
-      return
-    end
-    self.fqdn = uri.hostname
+    self.fqdn = if uri.hostname.nil?
+                  fqdn
+                else
+                  uri.hostname
+                end
   end
 end
