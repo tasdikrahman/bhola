@@ -49,4 +49,9 @@ class Domain < ApplicationRecord
       certificate_issuer
     end
   end
+
+  def url_without_scheme
+    uri = URI(fqdn)
+    uri.hostname
+  end
 end
