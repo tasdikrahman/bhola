@@ -24,6 +24,10 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
         end
 
         it 'persists the fqdn in the db' do
+          allow_any_instance_of(Domain).to receive(:valid?).and_return(true)
+          allow_any_instance_of(Domain).to receive(:certificate_expiring?).and_return(false)
+          allow_any_instance_of(Domain).to receive_message_chain(:errors, :any?).and_return(nil)
+
           post :create, :params => params
 
           expect(response).to have_http_status(201)
@@ -64,6 +68,27 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
           expect(response.content_type).to eq('application/json; charset=utf-8')
           expect(response.body).to eq(expected_response)
           expect(Domain.all.count).to eq(1)
+        end
+      end
+
+      context 'Domain.check_certificate? has errors' do
+        let(:error_message) { '{:socket_error=>[{:message=>"getaddrinfo: Name or service not known"}]}' }
+        let(:expected_response) do
+          {
+            'data' => {
+              'fqdn' => trimmed_fqdn
+            },
+            'errors' => ["#{trimmed_fqdn} is invalid, error message: #{error_message}"]
+          }.to_json
+        end
+
+        it 'will not persist the fqdn to domains table' do
+          post :create, :params => params
+
+          expect(response).to have_http_status(422)
+          expect(response.content_type).to eq('application/json; charset=utf-8')
+          expect(response.body).to eq(expected_response)
+          expect(Domain.where(fqdn: trimmed_fqdn).count).to eq(0)
         end
       end
     end
