@@ -202,27 +202,37 @@ RSpec.describe Domain, type: :model do
     end
   end
 
-  context '#url_without_scheme' do
+  context '#set_url_scheme' do
     let(:domain) { Domain.new(fqdn: fqdn) }
     let(:expected_url) { 'example.com' }
 
-    context 'http scheme' do
+    context 'fqdn passed with http scheme' do
       let(:fqdn) { 'http://example.com' }
 
       it 'will trim the http scheme from the passed URL' do
-        got = domain.url_without_scheme
+        domain.set_url_scheme
 
-        expect(got).to eq(expected_url)
+        expect(domain.fqdn).to eq(expected_url)
       end
     end
 
-    context 'https scheme' do
+    context 'fqdn passed with https scheme' do
       let(:fqdn) { 'https://example.com' }
 
       it 'will trim the https scheme from the passed URL' do
-        got = domain.url_without_scheme
+        domain.set_url_scheme
 
-        expect(got).to eq(expected_url)
+        expect(domain.fqdn).to eq(expected_url)
+      end
+    end
+
+    context 'fqdn passed without http/https scheme' do
+      let(:fqdn) { 'example.com' }
+
+      it 'will trim the https scheme from the passed URL' do
+        domain.set_url_scheme
+
+        expect(domain.fqdn).to eq(expected_url)
       end
     end
   end

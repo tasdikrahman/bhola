@@ -50,8 +50,12 @@ class Domain < ApplicationRecord
     end
   end
 
-  def url_without_scheme
+  def set_url_scheme
     uri = URI(fqdn)
-    uri.hostname
+    if uri.hostname.nil?
+      self.fqdn = fqdn
+      return
+    end
+    self.fqdn = uri.hostname
   end
 end
