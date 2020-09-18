@@ -18,7 +18,13 @@ module Api
                    :status => :unprocessable_entity
           else
             domain.save!
-            render :json => { :data => { 'fqdn': domain.fqdn }, :errors => [] }, :status => :created
+            render :json => { :data =>
+                                  { 'fqdn': domain.fqdn,
+                                    'certificate_expiring': domain.certificate_expiring,
+                                    'certificate_issued_at': domain.certificate_expiring_not_before,
+                                    'certificate_expiring_at': domain.certificate_expiring_not_after,
+                                    'certificate_issuer': domain.certificate_issuer }, :errors => [] },
+                   :status => :created
           end
         else
           render :json => { :data => { 'fqdn': domain.fqdn }, :errors => ["#{domain.fqdn} is already being tracked"] },
@@ -34,7 +40,10 @@ module Api
             domain_list = Array(domain_list).push(
               {
                 'fqdn': domain.fqdn,
-                'certificate_expiring': domain.certificate_expiring
+                'certificate_expiring': domain.certificate_expiring,
+                'certificate_issued_at': domain.certificate_expiring_not_before,
+                'certificate_expiring_at': domain.certificate_expiring_not_after,
+                'certificate_issuer': domain.certificate_issuer
               }
             )
           end

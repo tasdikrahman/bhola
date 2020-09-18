@@ -84,33 +84,49 @@ $ bundle exec rspec
 ```
 
 Not sure as of now, on how to display the codecoverage on the repo-readme as we are using github pipelines, but it's
-set to minimum coverage of [99% as of now](https://github.com/tasdikrahman/bhola/pull/40/)
+set to minimum coverage of [99.4% as of now](https://github.com/tasdikrahman/bhola/blob/master/spec/spec_helper.rb#L21)
 
 ### Api docs
 - inserting domain to be tracked
 ```
 $ curl --location --request POST 'localhost:3000/api/v1/domains' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "fqdn": "foo.example.com"
-}'
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+      "fqdn": "https://expired.badssl.com"
+  }'
+{
+    "data": {
+        "fqdn": "expired.badssl.com",
+        "certificate_expiring": true,
+        "certificate_issued_at": "2016-08-08T21:17:05.000Z",
+        "certificate_expiring_at": "2018-08-08T21:17:05.000Z",
+        "certificate_issuer": "/C=US/ST=California/L=San Francisco/O=BadSSL/CN=BadSSL Intermediate Certificate Authority"
+    },
+    "errors": []
+}
 ```
 - querying the domains stored
 ```
 $ curl --location --request GET 'localhost:3000/api/v1/domains' \
- --header 'Accept: application/json'
+  --header 'Accept: application/json'
 {
-  "data": [
-    {
-      "fqdn": "foo.example.com",
-      "certificate_expiring": false
-    },
-    {
-      "fqdn": "bar.example.com",
-      "certificate_expiring": false
-    }
-  ],
-  "errors": []
+    "data": [
+        {
+            "fqdn": "tasdikrahman.me",
+            "certificate_expiring": false,
+            "certificate_issued_at": "2020-05-06T00:00:00.000Z",
+            "certificate_expiring_at": "2022-04-14T12:00:00.000Z",
+            "certificate_issuer": "/C=US/O=DigiCert Inc/OU=www.digicert.com/CN=DigiCert SHA2 High Assurance Server CA"
+        },
+        {
+            "fqdn": "expired.badssl.com",
+            "certificate_expiring": true,
+            "certificate_issued_at": "2016-08-08T21:17:05.000Z",
+            "certificate_expiring_at": "2018-08-08T21:17:05.000Z",
+            "certificate_issuer": "/C=US/ST=California/L=San Francisco/O=BadSSL/CN=BadSSL Intermediate Certificate Authority"
+        }
+    ],
+    "errors": []
 }
 ```
 

@@ -14,10 +14,16 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
       end
 
       context 'and it doesn\'t exist in the db' do
+        let(:cert_not_before) { Time.parse('2012-10-1 8:00:00 Pacific Time (US & Canada)').utc }
+        let(:cert_not_after) { Time.parse('2030-10-1 8:00:00 Pacific Time (US & Canada)').utc }
         let(:expected_response) do
           {
             'data' => {
-              'fqdn' => trimmed_fqdn
+              'fqdn' => trimmed_fqdn,
+              'certificate_expiring' => false,
+              'certificate_issued_at' => cert_not_before,
+              'certificate_expiring_at' => cert_not_after,
+              'certificate_issuer' => 'Foo Inc'
             },
             'errors' => []
           }.to_json
@@ -27,6 +33,10 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
           allow_any_instance_of(Domain).to receive(:valid?).and_return(true)
           allow_any_instance_of(Domain).to receive(:certificate_expiring?).and_return(false)
           allow_any_instance_of(Domain).to receive_message_chain(:errors, :any?).and_return(nil)
+          allow_any_instance_of(Domain).to receive(:certificate_expiring).and_return(false)
+          allow_any_instance_of(Domain).to receive(:certificate_expiring_not_after).and_return(cert_not_after)
+          allow_any_instance_of(Domain).to receive(:certificate_expiring_not_before).and_return(cert_not_before)
+          allow_any_instance_of(Domain).to receive(:certificate_issuer).and_return('Foo Inc')
 
           post :create, :params => params
 
@@ -105,30 +115,55 @@ RSpec.describe Api::V1::DomainsController, type: :controller do
         end
 
         context 'there are domains being tracked' do
-          let!(:domain1) { Domain.create(fqdn: input_fqdn_1) }
-          let!(:domain2) { Domain.create(fqdn: input_fqdn_2) }
+          let(:cert_not_before) { Time.parse('2012-10-1 8:00:00 Pacific Time (US & Canada)').utc }
+          let(:cert_not_after) { Time.parse('2030-10-1 8:00:00 Pacific Time (US & Canada)').utc }
+          let!(:domain1) do
+            Domain.create(
+              fqdn: input_fqdn_1,
+              certificate_expiring: false,
+              certificate_expiring_not_after: cert_not_after,
+              certificate_expiring_not_before: cert_not_before,
+              certificate_issuer: 'foo'
+            )
+          end
+          let!(:domain2) do
+            Domain.create(
+              fqdn: input_fqdn_2,
+              certificate_expiring: false,
+              certificate_expiring_not_after: cert_not_after,
+              certificate_expiring_not_before: cert_not_before,
+              certificate_issuer: 'foo'
+            )
+          end
           let(:expected_response) do
             {
               'data' => [
                 {
-                  'fqdn' => input_fqdn_1,
-                  'certificate_expiring' => false
+                  'fqdn' => domain1.fqdn,
+                  'certificate_expiring' => domain1.certificate_expiring,
+                  'certificate_issued_at' => domain1.certificate_expiring_not_after,
+                  'certificate_expiring_at' => domain1.certificate_expiring_not_before,
+                  'certificate_issuer' => domain1.certificate_issuer
                 },
                 {
-                  'fqdn' => input_fqdn_2,
-                  'certificate_expiring' => false
+                  'fqdn' => domain2.fqdn,
+                  'certificate_expiring' => domain2.certificate_expiring,
+                  'certificate_issued_at' => domain2.certificate_expiring_not_after,
+                  'certificate_expiring_at' => domain2.certificate_expiring_not_before,
+                  'certificate_issuer' => domain2.certificate_issuer
                 }
               ],
               'errors' => []
             }.to_json
           end
 
-          it 'returns back the domains and it\'s fqdn and certificate_expiring field' do
+          it 'returns back the domains and other fields' do
             get :index
 
             expect(response).to have_http_status(200)
             expect(response.content_type).to eq('application/json; charset=utf-8')
-            expect(response.body).to eq(expected_response)
+            expect(response.body['data']).to eq(expected_response['data'])
+            expect(response.body['errors']).to eq(expected_response['errors'])
           end
         end
 
