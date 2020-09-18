@@ -20,6 +20,18 @@ $ bundle exec clockwork clock.rb
 
 ![Imgur Image](https://user-images.githubusercontent.com/4672518/93598889-f8c3f500-f9da-11ea-98ca-a55fff2023fc.png)
 
+## Assumptions made by Bhola
+
+- bhola assumes that the dns being inserted, resolves to a single IP, so in case you are doing
+dns loadbalancing on a single FQDN, with multiple IP's behind it, it may try connecting to
+whichever IP first get's returned.
+- bhola will not register the domain to be tracked, if it can't reach it, it would be apt to place
+bhola somewhere, in your network, which would make it possible for bhola to resolve your dns endpoints
+with ease, so in case, the domains which you are trying to track, if they resolve to a private IP, make
+sure bhola can reach them.
+- bhola will not register the domain to be tracked, if it doesn't have an SSL cert attached, it will
+not track it.
+
 ## Dev setup
 
 Please refer [DEVELOPMENT.md](https://github.com/tasdikrahman/bhola/blob/master/DEVELOPMENT.md)
