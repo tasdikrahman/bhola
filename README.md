@@ -84,7 +84,7 @@ $ bundle exec rspec
 ```
 
 Not sure as of now, on how to display the codecoverage on the repo-readme as we are using github pipelines, but it's
-set to minimum coverage of [99% as of now](https://github.com/tasdikrahman/bhola/pull/40/)
+set to minimum coverage of [99.4% as of now](https://github.com/tasdikrahman/bhola/blob/master/spec/spec_helper.rb#L21)
 
 ### Api docs
 - inserting domain to be tracked
