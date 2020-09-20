@@ -13,4 +13,3 @@ ln -s /usr/bin/nodejs /usr/bin/node
 bundle exec rake assets:precompile --trace
 
 exec bundle exec "$@"
-

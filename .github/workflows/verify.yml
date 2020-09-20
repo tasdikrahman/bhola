@@ -123,4 +123,3 @@ jobs:
           registry: docker.pkg.github.com
           repository: tasdikrahman/bhola/bhola
           tag_with_ref: true
-
