@@ -10,6 +10,7 @@ RUN printf "deb http://archive.debian.org/debian/ jessie main\ndeb-src http://ar
 
 RUN apt-get update \
     && apt-get install \
+    libdpkg-perl=1.17.5ubuntu5 \
     build-essential \
     libpq-dev \
     nodejs \
