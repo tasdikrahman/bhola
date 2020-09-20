@@ -2,7 +2,8 @@ FROM ruby:2.5.3-alpine
 
 ENV BUNDLE_PATH=/bundle \
     BUNDLE_BIN=/bundle/bin \
-    GEM_HOME=/bundle
+    GEM_HOME=/bundle \
+    BUNDLER_VERSION=2.1.4
 ENV PATH="${BUNDLE_BIN}:${PATH}"
 
 RUN apk update \
