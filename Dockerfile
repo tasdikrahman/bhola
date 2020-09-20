@@ -8,7 +8,7 @@ ENV PATH="${BUNDLE_BIN}:${PATH}"
 RUN apk update \
     && apk upgrade \
     && apk add --update --no-cache \
-    build-base curl-dev git postgresql-dev \
+    build-base curl-dev git postgresql-dev tzdata \
     yaml-dev zlib-dev nodejs yarn npm \
     && gem uninstall bundler \
     && gem install bundler -v 2.1.4
