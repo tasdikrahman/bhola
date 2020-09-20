@@ -127,6 +127,6 @@ jobs:
         with:
           username: tasdikrahman
           password: ${{ secrets.GITHUB_TOKEN }}
-          registry: docker.pkg.github.com
+          registry: ghcr.io
           repository: tasdikrahman/bhola/bhola
           tag_with_ref: true
