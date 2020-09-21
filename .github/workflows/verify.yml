@@ -129,7 +129,7 @@ jobs:
       - name: Generate container tag(s) and name
         run: |
           echo "::set-env name=TAG::${{ github.ref }}"
-          echo "::set-env name=CONTAINER_NAME::${{ github.repository_owner }}/bhola"
+          echo "::set-env name=CONTAINER_NAME::tasdikrahman/bhola"
       - name: Tag container image
         if: ${{ env.TAG }}
         run: |
