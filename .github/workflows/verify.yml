@@ -126,15 +126,10 @@ jobs:
       - name: Show image information
         run: |
           docker image inspect $(cat bhola.id)
-      - name: Generate container tag(s) and name
-        run: |
-          echo "::set-env name=TAG::${{ github.ref }}"
-          echo "::set-env name=CONTAINER_NAME::tasdikrahman/bhola"
       - name: Tag container image
-        if: ${{ env.TAG }}
         run: |
           id=$(cat bhola.id)
-          docker tag ${id} ghcr.io/${CONTAINER_NAME}:${TAG}
+          docker tag ${id} ghcr.io/tasdikrahman/bhola:${{ github.ref }}
       - name: Push the container image
         if: ${{ env.TAG }}
         run: |
