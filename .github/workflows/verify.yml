@@ -115,13 +115,16 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
+#      - name: Docker login
+        #env:
+          #GHCR_TOKEN: ${{ secrets.GHCR_PAT }}
+        #run: >
+          #echo ${GHCR_PAT} |
+          #docker login ghcr.io -u ${{ github.repository_owner }}
+          #--password-stdin
       - name: Docker login
-        env:
-          GHCR_TOKEN: ${{ secrets.GHCR_PAT }}
         run: >
-          echo ${GHCR_PAT} |
-          docker login ghcr.io -u ${{ github.repository_owner }}
-          --password-stdin
+          echo ${{ secrets.GHCR_PAT }} | docker login ghcr.io -u tasdikrahman --password-stdin
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v1
         with:
