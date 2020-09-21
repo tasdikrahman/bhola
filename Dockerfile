@@ -13,6 +13,10 @@ RUN apk update \
     && gem uninstall bundler \
     && gem install bundler -v 2.1.4
 
+RUN yarn install --check-files \
+    && bundle check || bundle install --binstubs="$BUNDLE_BIN" \
+    && bundle exec rake assets:precompile --trace
+
 ADD . /usr/src/app
 WORKDIR /usr/src/app
 COPY ./docker-entrypoint.sh /
