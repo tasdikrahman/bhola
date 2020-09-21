@@ -115,24 +115,39 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
-#      - name: Docker login
-        #env:
-          #GHCR_TOKEN: ${{ secrets.GHCR_PAT }}
-        #run: >
-          #echo ${GHCR_PAT} |
-          #docker login ghcr.io -u ${{ github.repository_owner }}
-          #--password-stdin
       - name: Docker login
         run: >
           echo ${{ secrets.GHCR_PAT }} | docker login ghcr.io -u tasdikrahman --password-stdin
-      - name: Push to GitHub Packages
-        uses: docker/build-push-action@v1
-        with:
-          username: tasdikrahman
-          password: ${{ secrets.GITHUB_TOKEN }}
-          registry: ghcr.io
-          repository: tasdikrahman/bhola
-          tag_with_ref: true
+      - name: Build container image
+        run: >
+          docker build
+          --label org.opencontainers.image.revision=${{ github.sha }}
+          --iidfile bhola.id .
+      - name: Show image information
+        run: |
+          docker image inspect $(cat bhola.id)
+      - name: Generate container tag(s) and name
+        run: |
+          TAGS=$(python3 tag-from-ref.py ${{ github.ref }})
+          echo "::set-env name=TAGS::${TAGS}"
+          echo "::set-env name=CONTAINER_NAME::${{ github.repository_owner }}/bhola"
+      - name: Tag container image
+        if: ${{ env.TAGS }}
+        run: |
+          id=$(cat bhola.id)
+          for t in ${TAGS}; do
+              docker tag ${id} ghcr.io/${CONTAINER_NAME}:${t}
+          done
+      - name: Push the container image
+        if: ${{ env.TAGS }}
+        run: |
+          for t in ${TAGS}; do
+              docker push ghcr.io/${CONTAINER_NAME}:${t}
+          done
+      - name: Docker logout
+        if: always()
+        run: |
+          docker logout ghcr.io
       - name: Push to Docker Hub
         uses: docker/build-push-action@v1
         with:
