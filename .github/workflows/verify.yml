@@ -122,11 +122,15 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: tasdikrahman/bhola
           tag_with_ref: true
+      - name: export GHCR PAT
+        run: export CR_PAT=GHCR_PAT
+      - name: authenticate to GHCR
+        run: echo $CR_PAT | docker login ghcr.io -u USERNAME --password-stdin
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v1
         with:
           username: tasdikrahman
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: ghcr.io
-          repository: tasdikrahman/bhola/bhola
+          repository: tasdikrahman/bhola
           tag_with_ref: true
