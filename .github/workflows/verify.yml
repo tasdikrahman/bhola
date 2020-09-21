@@ -132,13 +132,14 @@ jobs:
       - name: take the first docker image from the list
         run: |
           ID=$(docker images -a | awk '{print $3}' | sed '1d' | head -1)
+          echo $ID
       - name: Tag container image
         run: |
-          docker tag ${ID} ghcr.io/tasdikrahman/bhola:${{ github.ref }}
+          docker tag ${ID} ghcr.io/tasdikrahman/bhola:${{ github.SHA }}
       - name: Push the container image
         if: ${{ env.TAG }}
         run: |
-          docker push ghcr.io/${CONTAINER_NAME}:${TAG}
+          docker push ghcr.io/tasdikrahman/bhola:${{ github.SHA }}
       - name: Docker logout
         if: always()
         run: |
