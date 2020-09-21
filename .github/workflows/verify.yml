@@ -128,22 +128,17 @@ jobs:
           docker image inspect $(cat bhola.id)
       - name: Generate container tag(s) and name
         run: |
-          TAGS=$(python3 tag-from-ref.py ${{ github.ref }})
-          echo "::set-env name=TAGS::${TAGS}"
+          echo "::set-env name=TAG::${{ github.ref }}"
           echo "::set-env name=CONTAINER_NAME::${{ github.repository_owner }}/bhola"
       - name: Tag container image
-        if: ${{ env.TAGS }}
+        if: ${{ env.TAG }}
         run: |
           id=$(cat bhola.id)
-          for t in ${TAGS}; do
-              docker tag ${id} ghcr.io/${CONTAINER_NAME}:${t}
-          done
+          docker tag ${id} ghcr.io/${CONTAINER_NAME}:${TAG}
       - name: Push the container image
-        if: ${{ env.TAGS }}
+        if: ${{ env.TAG }}
         run: |
-          for t in ${TAGS}; do
-              docker push ghcr.io/${CONTAINER_NAME}:${t}
-          done
+          docker push ghcr.io/${CONTAINER_NAME}:${TAG}
       - name: Docker logout
         if: always()
         run: |
