@@ -137,7 +137,6 @@ jobs:
         run: |
           docker tag ${ID} ghcr.io/tasdikrahman/bhola:${{ github.SHA }}
       - name: Push the container image
-        if: ${{ env.TAG }}
         run: |
           docker push ghcr.io/tasdikrahman/bhola:${{ github.SHA }}
       - name: Docker logout
