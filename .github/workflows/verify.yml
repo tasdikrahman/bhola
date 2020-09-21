@@ -115,22 +115,25 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
-      - name: Push to Docker Hub
-        uses: docker/build-push-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: tasdikrahman/bhola
-          tag_with_ref: true
-      - name: export GHCR PAT
-        run: export CR_PAT=GHCR_PAT
-      - name: authenticate to GHCR
-        run: echo $CR_PAT | docker login ghcr.io -u USERNAME --password-stdin
+      - name: Docker login
+        env:
+          GHCR_TOKEN: ${{ secrets.GHCR_PAT }}
+        run: >
+          echo ${GHCR_PAT} |
+          docker login ghcr.io -u ${{ github.repository_owner }}
+          --password-stdin
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v1
         with:
           username: tasdikrahman
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: ghcr.io
+          repository: tasdikrahman/bhola
+          tag_with_ref: true
+      - name: Push to Docker Hub
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
           repository: tasdikrahman/bhola
           tag_with_ref: true
