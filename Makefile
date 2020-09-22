@@ -8,4 +8,3 @@ docker.start: config-copy
 
 docker.stop:
 	docker-compose down
-
