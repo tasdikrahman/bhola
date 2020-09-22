@@ -9,7 +9,10 @@ services:
       POSTGRES_USER: "bhola_dev"
       POSTGRES_DB: "bhola_dev"
   web:
-    build: .
+    image: bhola_container_image_dev
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     environment:
@@ -17,3 +20,12 @@ services:
       RAILS_ENV: development
     depends_on:
       - db
+  clockwork:
+    image: bhola_container_image_dev
+    command: ["bundle", "exec", "clockwork", "clock.rb"]
+    environment:
+      DB_HOST: db
+      RAILS_ENV: development
+    depends_on:
+      - db
+      - web
