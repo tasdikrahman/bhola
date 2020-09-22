@@ -8,6 +8,7 @@ ENV PATH="${BUNDLE_BIN}:${PATH}"
 ADD . /usr/src/app
 WORKDIR /usr/src/app
 COPY ./docker-entrypoint.sh /
+COPY ./config/application.sample.yaml ./config/application.yaml
 RUN chmod +x /docker-entrypoint.sh
 
 RUN apk update \
@@ -19,8 +20,7 @@ RUN apk update \
     && gem install bundler -v 2.1.4 \
     && yarn install --check-files \
     && bundle check || bundle install -j3 \
-    && bundle exec rake assets:precompile --trace \
-    && cp config/application.sample.yaml config/application.yaml
+    && bundle exec rake assets:precompile --trace
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["rails", "s", "-p", "8080", "-b", "0.0.0.0"]
