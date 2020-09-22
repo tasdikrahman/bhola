@@ -18,8 +18,9 @@ RUN apk update \
     && gem uninstall bundler \
     && gem install bundler -v 2.1.4 \
     && yarn install --check-files \
-    && bundle check || bundle install --binstubs="$BUNDLE_BIN" \
-    && bundle exec rake assets:precompile --trace
+    && bundle check || bundle install -j3 \
+    && bundle exec rake assets:precompile --trace \
+    && cp ./config/application.sample.yml ./config/application.yml
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["rails", "s", "-p", "8080", "-b", "0.0.0.0"]

@@ -6,6 +6,8 @@
 
 which makes the process very reactive when the certificate expires
 
+![Imgur Image](https://user-images.githubusercontent.com/4672518/93598889-f8c3f500-f9da-11ea-98ca-a55fff2023fc.png)
+
 ## Running it
 
 ```
@@ -18,7 +20,13 @@ $ bundle exec clockwork clock.rb
 # open on your browser localhost:3000
 ```
 
-![Imgur Image](https://user-images.githubusercontent.com/4672518/93598889-f8c3f500-f9da-11ea-98ca-a55fff2023fc.png)
+Or if you prefer a single command
+
+```
+# requires docker-compose on your machine
+$ make docker.start
+# open localhost:8080 on browser
+```
 
 ## Assumptions made by Bhola
 
