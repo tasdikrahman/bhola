@@ -122,3 +122,27 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: tasdikrahman/bhola
           tag_with_ref: true
+      - name: Docker login
+        run: >
+          echo ${{ secrets.GHCR_PAT }} | docker login ghcr.io -u tasdikrahman --password-stdin
+      - name: Build container image
+        run: >
+          docker build
+          --label org.opencontainers.image.revision=${{ github.sha }}
+          --iidfile bhola.id .
+      - name: Show image information
+        run: |
+          docker image inspect $(cat bhola.id)
+      - name: Tag the first container image
+        run: |
+          docker images
+          ID=$(docker images -a | awk '{print $3}' | sed '1d' | head -1)
+          echo $ID
+          docker tag ${ID} ghcr.io/tasdikrahman/bhola:${{ github.SHA }}
+      - name: Push the container image
+        run: |
+          docker push ghcr.io/tasdikrahman/bhola:${{ github.SHA }}
+      - name: Docker logout
+        if: always()
+        run: |
+          docker logout ghcr.io
