@@ -1,6 +1,6 @@
 # borrowed and modified from https://boringrails.com/articles/building-a-rails-ci-pipeline-with-github-actions/
 
-name: Verify
+name: CI
 on: [push]
 
 jobs:
