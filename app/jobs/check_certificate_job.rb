@@ -10,6 +10,11 @@ class CheckCertificateJob < ApplicationJob
     Domain.all.each do |domain|
       if domain.certificate_expiring?
         Rails.logger.info("#{domain.fqdn} is expiring within the buffer period")
+        if (Figaro.env.send_expiry_notifications_to_slack == true) && (Figaro.env.slack_webhook_url != '')
+          message = "Your #{domain.fqdn} is expiring at #{domain.certificate_expiring_not_before}, please renew your cert"
+          slack_notifier = SlackNotifier.new(Figaro.env.slack_webhook_url)
+          slack_notifier.notify(message)
+        end
       else
         Rails.logger.info("#{domain.fqdn} is not expiring within the buffer period")
       end

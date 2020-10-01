@@ -7,11 +7,14 @@ test:
   certificate_expiry_threshold: "10"
   check_certificate_job_retrigger_threshold: "86400"
   slack_webhook_url: "http://mywebhook.slack.com/my/webhook"
+  send_expiry_notifications_to_slack: false
 development:
   check_certificate_job_retrigger_threshold: "10"
   certificate_expiry_threshold: "10"
   slack_webhook_url: "http://mywebhook.slack.com/my/webhook"
+  send_expiry_notifications_to_slack: false
 production:
   check_certificate_job_retrigger_threshold: "86400"
   certificate_expiry_threshold: "10"
   slack_webhook_url: "http://mywebhook.slack.com/my/webhook"
+  send_expiry_notifications_to_slack: true
