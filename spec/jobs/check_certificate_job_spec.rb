@@ -43,6 +43,19 @@ RSpec.describe CheckCertificateJob, type: :job do
           expect(Rails.logger).to have_received(:info).with("#{fqdn} is expiring within the buffer period")
         end
 
+        context 'when send_expiry_notifications_to_slack env var is set to false' do
+          let(:slack_webhook_url) { 'foo.slackwebhook.com/bar/webhook' }
+
+          it 'will not call SlackNotifier#notify' do
+            allow_any_instance_of(Domain).to receive(:certificate_expiring?).and_return(true)
+            allow(Figaro).to receive_message_chain(:env, :send_expiry_notifications_to_slack).and_return(false)
+            allow(Figaro).to receive_message_chain(:env, :slack_webhook_url).and_return(slack_webhook_url)
+            expect_any_instance_of(SlackNotifier).not_to receive(:notify).with(anything)
+
+            CheckCertificateJob.perform_now
+          end
+        end
+
         context 'when send_expiry_notifications_to_slack env var is set to true' do
           context 'when slack_webhook_url is not empty' do
             let(:cert_not_before) { Time.parse('2012-10-1 8:00:00 Pacific Time (US & Canada)').utc }
