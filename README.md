@@ -102,6 +102,10 @@ $ curl --location --request GET 'localhost:3000/api/v1/domains' \
 }
 ```
 
+### Creating a webhook for you slack channel for bhola to use
+
+Please follow https://api.slack.com/messaging/webhooks for the same.
+
 ### What bhola is not/will not be
 
 - will not generate certificates for you by being the intermediate broker

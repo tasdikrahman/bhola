@@ -1,11 +1,17 @@
-## value in days, if the certificate expiry is happening lower than this value
-## then the domain owner be notified
+# certificate_expiry_threshold: "10": value is in days
+# check_certificate_job_retrigger_threshold: "86400": value in seconds
+# slack_webhook_url: "http://mywebhook.slack.com": value needs to be generated for your org's slack, generate by
+#                     following directions in README
+
 test:
   certificate_expiry_threshold: "10"
   check_certificate_job_retrigger_threshold: "86400"
+  slack_webhook_url: "http://mywebhook.slack.com/my/webhook"
 development:
   check_certificate_job_retrigger_threshold: "10"
   certificate_expiry_threshold: "10"
+  slack_webhook_url: "http://mywebhook.slack.com/my/webhook"
 production:
   check_certificate_job_retrigger_threshold: "86400"
   certificate_expiry_threshold: "10"
+  slack_webhook_url: "http://mywebhook.slack.com/my/webhook"
