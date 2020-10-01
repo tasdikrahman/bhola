@@ -13,10 +13,13 @@ which makes the process very reactive when the certificate expires
 ```
 # Add appropriate values in application.yaml
 $ cp config/application.sample.yaml config/application.yml
+
 # start server process
 $ bundle exec rails s -b 0.0.0.0 -p 3000
+
 # start the clockwork process
 $ bundle exec clockwork clock.rb
+
 # open on your browser localhost:3000
 ```
 
@@ -25,6 +28,7 @@ Or if you prefer a single command
 ```
 # requires docker-compose on your machine
 $ make docker.start
+
 # open localhost:8080 on browser
 ```
 
@@ -45,13 +49,18 @@ not track it.
 Please refer [DEVELOPMENT.md](https://github.com/tasdikrahman/bhola/blob/master/DEVELOPMENT.md)
 
 ### Api docs
-- inserting domain to be tracked
+####  inserting domain to be tracked
+##### Example request
 ```
 $ curl --location --request POST 'localhost:3000/api/v1/domains' \
   --header 'Content-Type: application/json' \
   --data-raw '{
       "fqdn": "https://expired.badssl.com"
   }'
+```
+
+##### Example response
+```
 {
     "data": {
         "fqdn": "expired.badssl.com",
@@ -63,10 +72,15 @@ $ curl --location --request POST 'localhost:3000/api/v1/domains' \
     "errors": []
 }
 ```
-- querying the domains stored
+#### querying the domains stored
+##### Example request
 ```
 $ curl --location --request GET 'localhost:3000/api/v1/domains' \
   --header 'Accept: application/json'
+```
+
+##### Example response
+```
 {
     "data": [
         {
@@ -87,6 +101,10 @@ $ curl --location --request GET 'localhost:3000/api/v1/domains' \
     "errors": []
 }
 ```
+
+### Creating a webhook for you slack channel for bhola to use
+
+Please follow https://api.slack.com/messaging/webhooks for the same.
 
 ### What bhola is not/will not be
 
