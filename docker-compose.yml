@@ -18,6 +18,8 @@ services:
     environment:
       DB_HOST: db
       RAILS_ENV: development
+      SEND_EXPIRY_NOTIFICATIONS_TO_SLACK: "true"
+      SLACK_WEBHOOK_URL: https://hooks.slack.com/services/myslack-webhook-url
     depends_on:
       - db
   clockwork:
@@ -26,6 +28,8 @@ services:
     environment:
       DB_HOST: db
       RAILS_ENV: development
+      SEND_EXPIRY_NOTIFICATIONS_TO_SLACK: "true"
+      SLACK_WEBHOOK_URL: https://hooks.slack.com/services/myslack-webhook-url
     depends_on:
       - db
       - web
