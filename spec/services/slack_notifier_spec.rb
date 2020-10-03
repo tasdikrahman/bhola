@@ -74,6 +74,7 @@ RSpec.describe SlackNotifier do
 
             expect(Rails.logger).
               to have_received(:info).with(error_log)
+            expect(slack_notifier.errors.full_messages).to eq(["Connection refused {:message=>\"#{http_error_response_to_s}\"}"])
           end
         end
       end

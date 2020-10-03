@@ -2,6 +2,8 @@
 
 # SlackNotifier is a generic class which will be used to send POST calls to the slack webhook
 class SlackNotifier
+  include ActiveModel::Validations
+
   attr_reader :webhook_url
 
   def initialize(webhook_url)
@@ -17,5 +19,6 @@ class SlackNotifier
     https.request(request)
   rescue Errno::ECONNREFUSED => e
     Rails.logger.info("Error connecting to the slack webhook endpoint. Error: #{e.message}")
+    errors.add(:connection_refused, message: e.message.to_s)
   end
 end
