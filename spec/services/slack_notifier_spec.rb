@@ -60,7 +60,7 @@ RSpec.describe SlackNotifier do
           let(:http_error_response_to_s) { "Connection refused - #{http_error_response}" }
           let(:error_log) { "Error connecting to the slack webhook endpoint. Error: #{http_error_response_to_s}" }
 
-          it 'will return back an error object back to the caller, mentioning the url provided is invalid' do
+          it 'will log error message and raise an exception of class Errno::ECONNREFUSED with the right message' do
             allow(Rails.logger).to receive(:info)
             allow(URI).to receive(:parse).with(webhook_url).and_return(uri_https_double)
             allow(URI).to receive(:parse).with(webhook_url).and_return(uri_https_double)
@@ -70,11 +70,8 @@ RSpec.describe SlackNotifier do
               to receive(:request).
               and_raise(Errno::ECONNREFUSED, http_error_response)
 
-            slack_notifier.notify(message)
-
-            expect(Rails.logger).
-              to have_received(:info).with(error_log)
-            expect(slack_notifier.errors.full_messages).to eq(["Connection refused {:message=>\"#{http_error_response_to_s}\"}"])
+            expect { slack_notifier.notify(message) }.to raise_error(Errno::ECONNREFUSED)
+            expect(Rails.logger).to have_received(:info).with(error_log)
           end
         end
       end
