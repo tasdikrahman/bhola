@@ -13,3 +13,7 @@
 - Pushing container images for bhola for each commit to ghcr.io and docker hub
 - Added ability to send expiry notifications via slack, putting it behind feature flag
     - env vars to be set SLACK_WEBHOOK_URL and SEND_EXPIRY_NOTIFICATIONS_TO_SLACK
+
+### changelog comparison
+
+- https://github.com/tasdikrahman/bhola/compare/v0.1.0...v0.2.0
