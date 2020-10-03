@@ -15,5 +15,8 @@ class SlackNotifier
     request = Net::HTTP::Post.new(uri.path, { 'Content-Type' => 'application/json' })
     request.body = { text: message.to_s }.to_json
     https.request(request)
+  rescue Errno::ECONNREFUSED => e
+    Rails.logger.info("Error connecting to the slack webhook endpoint. Error: #{e.message}")
+    raise
   end
 end
