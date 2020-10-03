@@ -8,10 +8,18 @@ which makes the process very reactive when the certificate expires
 
 ![Imgur Image](https://user-images.githubusercontent.com/4672518/93598889-f8c3f500-f9da-11ea-98ca-a55fff2023fc.png)
 
+Bhola also allows you to send notifications to a slack channel, for you to be on top of your cert expiration alerts
+
+![Imgur Image](https://user-images.githubusercontent.com/4672518/94993879-9c073380-05b1-11eb-81f0-77f259ceea37.png)
+
 ## Running it
 
 ```
 # Add appropriate values in application.yaml
+
+# If you want to enable slack notifications for cert expiry, set SEND_EXPIRY_NOTIFICATIONS_TO_SLACK to "true"
+# add the value for SLACK_WEBHOOK_URL after you have created the slack webhook url.
+# to create one, follow: https://github.com/tasdikrahman/bhola#creating-a-webhook-for-you-slack-channel-for-bhola-to-use
 $ cp config/application.sample.yaml config/application.yml
 
 # start server process
@@ -27,6 +35,10 @@ Or if you prefer a single command
 
 ```
 # requires docker-compose on your machine
+
+# If you want to enable slack notifications for cert expiry, set SEND_EXPIRY_NOTIFICATIONS_TO_SLACK to "true"
+# add the value for SLACK_WEBHOOK_URL after you have created the slack webhook url.
+# to create one, follow: https://github.com/tasdikrahman/bhola#creating-a-webhook-for-you-slack-channel-for-bhola-to-use
 $ make docker.start
 
 # open localhost:8080 on browser
