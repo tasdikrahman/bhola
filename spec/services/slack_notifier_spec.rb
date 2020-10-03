@@ -34,19 +34,48 @@ RSpec.describe SlackNotifier do
     let(:request_double) { instance_double(Net::HTTP::Post, :body= => request_body) }
 
     context 'when the webhook url is invalid' do
-      let(:webhook_path) { '/invalid' }
-      let(:response_double) { instance_double(Net::HTTPForbidden, :code => '403', :body => 'invalid_token') }
+      context 'when url is valid, but the path is wrong' do
+        let(:webhook_path) { '/invalid' }
+        let(:response_double) { instance_double(Net::HTTPForbidden, :code => '403', :body => 'invalid_token') }
 
-      it 'will return back the response code and body' do
-        allow(net_http_double).to receive(:request).and_return(response_double)
-        allow(URI).to receive(:parse).with(webhook_url).and_return(uri_https_double)
-        allow(Net::HTTP).to receive(:new).with(webhook_host, webhook_port).and_return(net_http_double)
-        allow(Net::HTTP::Post).to receive(:new).with(webhook_path, request_headers).and_return(request_double)
+        it 'will return back the response code and body' do
+          allow(net_http_double).to receive(:request).and_return(response_double)
+          allow(URI).to receive(:parse).with(webhook_url).and_return(uri_https_double)
+          allow(Net::HTTP).to receive(:new).with(webhook_host, webhook_port).and_return(net_http_double)
+          allow(Net::HTTP::Post).to receive(:new).with(webhook_path, request_headers).and_return(request_double)
 
-        response = slack_notifier.notify(message)
+          response = slack_notifier.notify(message)
 
-        expect(response.code).to eq('403')
-        expect(response.body).to eq('invalid_token')
+          expect(response.code).to eq('403')
+          expect(response.body).to eq('invalid_token')
+        end
+      end
+
+      context 'when the url is invalid' do
+        let(:webhook_url) { 'invalid-domain.com' }
+
+        context 'url is not a valid domain' do
+          let(:webhook_path) { '/pathwouldnotmatter' }
+          let(:http_error_response) { 'Failed to open TCP connection to :80 (Connection refused - connect(2) for nil port 80' }
+          let(:http_error_response_to_s) { "Connection refused - #{http_error_response}" }
+          let(:error_log) { "Error connecting to the slack webhook endpoint. Error: #{http_error_response_to_s}" }
+
+          it 'will return back an error object back to the caller, mentioning the url provided is invalid' do
+            allow(Rails.logger).to receive(:info)
+            allow(URI).to receive(:parse).with(webhook_url).and_return(uri_https_double)
+            allow(URI).to receive(:parse).with(webhook_url).and_return(uri_https_double)
+            allow(Net::HTTP).to receive(:new).with(webhook_host, webhook_port).and_return(net_http_double)
+            allow(Net::HTTP::Post).to receive(:new).with(webhook_path, request_headers).and_return(request_double)
+            allow(net_http_double).
+              to receive(:request).
+              and_raise(Errno::ECONNREFUSED, http_error_response)
+
+            slack_notifier.notify(message)
+
+            expect(Rails.logger).
+              to have_received(:info).with(error_log)
+          end
+        end
       end
     end
 
