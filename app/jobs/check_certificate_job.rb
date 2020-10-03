@@ -13,11 +13,15 @@ class CheckCertificateJob < ApplicationJob
         if (Figaro.env.send_expiry_notifications_to_slack == true) && !Figaro.env.slack_webhook_url.empty?
           message = "Your #{domain.fqdn} is expiring at #{domain.certificate_expiring_not_before}, please renew your cert"
           slack_notifier = SlackNotifier.new(Figaro.env.slack_webhook_url)
-          response = slack_notifier.notify(message)
-          if response.code == '200'
-            Rails.logger.info("Expiry notification successfully sent to slack for domain #{domain.fqdn}")
-          elsif response.code == '403'
-            Rails.logger.info("Expiry notification could not be sent for domain #{domain.fqdn}, status code: #{response.code}, response body: #{response.body}")
+          begin
+            response = slack_notifier.notify(message)
+            if response.code == '200'
+              Rails.logger.info("Expiry notification successfully sent to slack for domain #{domain.fqdn}")
+            elsif response.code == '403'
+              Rails.logger.info("Expiry notification could not be sent for domain #{domain.fqdn}, status code: #{response.code}, response body: #{response.body}")
+            end
+          rescue Errno::ECONNREFUSED => e
+            Rails.logger.info("Failed to notify to slack channel via the webhook endpoint. Error: #{e.message}")
           end
         end
       else

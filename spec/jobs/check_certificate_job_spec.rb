@@ -111,6 +111,28 @@ RSpec.describe CheckCertificateJob, type: :job do
                   with("Expiry notification could not be sent for domain #{fqdn}, status code: #{response_double.code}, response body: #{response_double.body}")
               end
             end
+
+            context 'when there was an error connecting to the slack webhook endpoint' do
+              context 'when the endpoint is an invalid domain' do
+                let(:http_error_response) { 'Failed to open TCP connection to :80 (Connection refused - connect(2) for nil port 80' }
+                let(:slack_webhook_url) { 'invalid-domain.com' }
+
+                it 'will catch the exception raised by SlackNotifier#notify' do
+                  allow(Rails.logger).to receive(:info)
+                  allow_any_instance_of(Domain).to receive(:certificate_expiring?).and_return(true)
+                  allow_any_instance_of(Domain).to receive(:certificate_expiring?).and_return(true)
+                  allow_any_instance_of(Domain).to receive(:certificate_expiring_not_before).and_return(cert_not_before)
+                  allow(Figaro).to receive_message_chain(:env, :send_expiry_notifications_to_slack).and_return(true)
+                  allow(Figaro).to receive_message_chain(:env, :slack_webhook_url).and_return(slack_webhook_url)
+                  allow_any_instance_of(SlackNotifier).to receive(:notify).with(message).
+                    and_raise(Errno::ECONNREFUSED, http_error_response)
+
+                  expect { CheckCertificateJob.perform_now }.not_to raise_error
+                  expect(Rails.logger).not_to have_received(:info).
+                    with("Expiry notification successfully sent to slack for domain #{fqdn}")
+                end
+              end
+            end
           end
 
           context 'when slack_webhook_url_is empty' do
