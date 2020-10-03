@@ -48,7 +48,7 @@ RSpec.describe CheckCertificateJob, type: :job do
 
           it 'will not call SlackNotifier#notify' do
             allow_any_instance_of(Domain).to receive(:certificate_expiring?).and_return(true)
-            allow(Figaro).to receive_message_chain(:env, :send_expiry_notifications_to_slack).and_return(false)
+            allow(Figaro).to receive_message_chain(:env, :send_expiry_notifications_to_slack).and_return('false')
             allow(Figaro).to receive_message_chain(:env, :slack_webhook_url).and_return(slack_webhook_url)
             expect_any_instance_of(SlackNotifier).not_to receive(:notify).with(anything)
 
@@ -66,7 +66,7 @@ RSpec.describe CheckCertificateJob, type: :job do
             it 'will call SlackNotifier#notify' do
               allow_any_instance_of(Domain).to receive(:certificate_expiring?).and_return(true)
               allow_any_instance_of(Domain).to receive(:certificate_expiring_not_before).and_return(cert_not_before)
-              allow(Figaro).to receive_message_chain(:env, :send_expiry_notifications_to_slack).and_return(true)
+              allow(Figaro).to receive_message_chain(:env, :send_expiry_notifications_to_slack).and_return('true')
               allow(Figaro).to receive_message_chain(:env, :slack_webhook_url).and_return(slack_webhook_url)
               allow_any_instance_of(SlackNotifier).to receive(:notify).with(message).and_return(response_double)
               expect_any_instance_of(SlackNotifier).to receive(:notify).with(message).once
@@ -80,7 +80,7 @@ RSpec.describe CheckCertificateJob, type: :job do
                 allow_any_instance_of(Domain).to receive(:certificate_expiring?).and_return(true)
                 allow_any_instance_of(Domain).to receive(:certificate_expiring?).and_return(true)
                 allow_any_instance_of(Domain).to receive(:certificate_expiring_not_before).and_return(cert_not_before)
-                allow(Figaro).to receive_message_chain(:env, :send_expiry_notifications_to_slack).and_return(true)
+                allow(Figaro).to receive_message_chain(:env, :send_expiry_notifications_to_slack).and_return('true')
                 allow(Figaro).to receive_message_chain(:env, :slack_webhook_url).and_return(slack_webhook_url)
                 allow_any_instance_of(SlackNotifier).to receive(:notify).with(message).and_return(response_double)
 
@@ -98,7 +98,7 @@ RSpec.describe CheckCertificateJob, type: :job do
                 allow_any_instance_of(Domain).to receive(:certificate_expiring?).and_return(true)
                 allow_any_instance_of(Domain).to receive(:certificate_expiring?).and_return(true)
                 allow_any_instance_of(Domain).to receive(:certificate_expiring_not_before).and_return(cert_not_before)
-                allow(Figaro).to receive_message_chain(:env, :send_expiry_notifications_to_slack).and_return(true)
+                allow(Figaro).to receive_message_chain(:env, :send_expiry_notifications_to_slack).and_return('true')
                 allow(Figaro).to receive_message_chain(:env, :slack_webhook_url).and_return(slack_webhook_url)
                 allow_any_instance_of(SlackNotifier).to receive(:notify).with(message).and_return(response_double)
 
@@ -122,7 +122,7 @@ RSpec.describe CheckCertificateJob, type: :job do
                   allow_any_instance_of(Domain).to receive(:certificate_expiring?).and_return(true)
                   allow_any_instance_of(Domain).to receive(:certificate_expiring?).and_return(true)
                   allow_any_instance_of(Domain).to receive(:certificate_expiring_not_before).and_return(cert_not_before)
-                  allow(Figaro).to receive_message_chain(:env, :send_expiry_notifications_to_slack).and_return(true)
+                  allow(Figaro).to receive_message_chain(:env, :send_expiry_notifications_to_slack).and_return('true')
                   allow(Figaro).to receive_message_chain(:env, :slack_webhook_url).and_return(slack_webhook_url)
                   allow_any_instance_of(SlackNotifier).to receive(:notify).with(message).
                     and_raise(Errno::ECONNREFUSED, http_error_response)
@@ -140,7 +140,7 @@ RSpec.describe CheckCertificateJob, type: :job do
 
             it 'will not call SlackNotifier#notify' do
               allow_any_instance_of(Domain).to receive(:certificate_expiring?).and_return(true)
-              allow(Figaro).to receive_message_chain(:env, :send_expiry_notifications_to_slack).and_return(true)
+              allow(Figaro).to receive_message_chain(:env, :send_expiry_notifications_to_slack).and_return('true')
               allow(Figaro).to receive_message_chain(:env, :slack_webhook_url).and_return(slack_webhook_url)
               expect_any_instance_of(SlackNotifier).not_to receive(:notify).with(anything)
 
