@@ -3,11 +3,11 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: localhost
   timeout: 5000
   database: bhola_dev
   username: bhola_dev
   password: password
-  host: localhost
 
 development:
   <<: *default
@@ -21,3 +21,8 @@ test:
 
 production:
   <<: *default
+  host: <%= Figaro.env.DB_HOST %>
+  timeout: <%= Figaro.env.DB_TIMEOUT %>
+  database: <%= Figaro.env.DB_DATABASE %>
+  username: <%= Figaro.env.DB_USERNAME %>
+  password: <%= Figaro.env.DB_PASSWORD %>
